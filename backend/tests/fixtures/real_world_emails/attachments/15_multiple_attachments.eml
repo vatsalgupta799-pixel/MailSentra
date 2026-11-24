@@ -1,0 +1,38 @@
+From: files@enterprise-archive.org
+To: compliance@enterprise-archive.org
+Subject: Quarterly Archival Package
+Date: Tue, 24 Nov 2026 12:30:00 +0000
+Message-ID: <archive-package-112233@enterprise-archive.org>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Part_Multi_Att"
+
+------=_Part_Multi_Att
+Content-Type: text/plain; charset="utf-8"
+
+Enclosed are the three required verification documents:
+1. Formal summary (PDF)
+2. Integrity notes (TXT)
+3. Raw data bundle (ZIP)
+
+------=_Part_Multi_Att
+Content-Type: application/pdf; name="Formal_Summary.pdf"
+Content-Disposition: attachment; filename="Formal_Summary.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjUKJcfsj6IKMSAwIG9iago8PC9UeXBlIC9DYXRhbG9nPj4KZW5kb2JqCnhyZWYKMCAy
+CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAwMCBuIAp0cmFpbGVyCjw8L1NpemUg
+Mi9Sb290IDEgMCBSPj4Kc3RhcnR4cmVmCjU2CiUlRU9GCg==
+------=_Part_Multi_Att
+Content-Type: text/plain; name="integrity_notes.txt"
+Content-Disposition: attachment; filename="integrity_notes.txt"
+
+All hashes verified against ledger block 99120.
+------=_Part_Multi_Att
+Content-Type: application/zip; name="harmless_archive.zip"
+Content-Disposition: attachment; filename="harmless_archive.zip"
+Content-Transfer-Encoding: base64
+
+UEsDBAoAAAAAAIdfDVsAAAAAAAAAAAAAAAAIABwAZGF0YS50eHRVVAkAAx7n01se59NbdXgLAAEE
+6AMAAAToAwAAUEsBAh4DCgAAAAAAh18NWwAAAAAAAAAAAAAAAAgAGAAAAAAAAAAAAKSBAAAAAGRh
+dGEudHh0VVQFAAMe59NbdXgLAAEE6AMAAAToAwAAUEsFBgAAAAABAAEATgAAAEAAAAAAAA==
+------=_Part_Multi_Att--

@@ -1,0 +1,42 @@
+From: University Registrar <registrar@stanford.edu>
+To: Undergraduate Students <students@stanford.edu>
+Subject: Autumn Quarter 2026 Final Examination Schedule
+Date: Mon, 24 Nov 2026 09:15:00 -0800
+Message-ID: <registrar-announcement-2026-q4@stanford.edu>
+Return-Path: <registrar-bounce@stanford.edu>
+Reply-To: <registrar@stanford.edu>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="----=_Part_Univ_01"
+
+------=_Part_Univ_01
+Content-Type: text/plain; charset="utf-8"
+
+Dear Students,
+
+The final examination schedule for Autumn Quarter 2026 is now available.
+Please visit the official registrar portal to verify your exam dates and locations:
+https://registrar.stanford.edu/exams/autumn-2026
+
+If you have schedule conflicts, please contact your academic advisor.
+
+Sincerely,
+Office of the University Registrar
+Stanford University
+
+------=_Part_Univ_01
+Content-Type: text/html; charset="utf-8"
+
+<!DOCTYPE html>
+<html>
+<head><title>Exam Schedule</title></head>
+<body>
+  <h2>Autumn Quarter 2026 Final Examination Schedule</h2>
+  <p>Dear Students,</p>
+  <p>The final examination schedule for Autumn Quarter 2026 is now available.</p>
+  <p>Please visit the <a href="https://registrar.stanford.edu/exams/autumn-2026">Registrar Examination Schedule</a> to verify your dates and locations.</p>
+  <p>If you have schedule conflicts, please contact your academic advisor.</p>
+  <br>
+  <p>Sincerely,<br>Office of the University Registrar<br>Stanford University</p>
+</body>
+</html>
+------=_Part_Univ_01--

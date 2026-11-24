@@ -1,0 +1,17 @@
+From: broken@malformed-boundary.com
+To: victim@domain.com
+Subject: Malformed Boundary Test Case
+Date: Tue, 24 Nov 2026 16:30:00 +0000
+Message-ID: <broken-bound-99@malformed-boundary.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="CORRECT_BOUNDARY"
+
+--WRONG_BOUNDARY_TYPO
+Content-Type: text/plain; charset="utf-8"
+
+This boundary marker has a typo and does not match the declared MIME header.
+
+--CORRECT_BOUNDARY
+Content-Type: text/plain; charset="utf-8"
+
+This part has the correct boundary. Notice there is no closing delimiter anywhere!

@@ -1,0 +1,15 @@
+From: links@url-corpus.org
+To: security-researcher@domain.com
+Subject: Comprehensive URL Extraction Corpus
+Date: Tue, 24 Nov 2026 19:30:00 +0000
+Message-ID: <url-corpus-998811@url-corpus.org>
+Content-Type: text/html; charset="utf-8"
+
+<p>1. Standard HTTPS: https://cyberdyne-defense.com/path/doc.html</p>
+<p>2. Plain HTTP: http://insecure-portal.org/login</p>
+<p>3. IP host with port: http://192.168.1.100:8443/management</p>
+<p>4. URL shortener: https://bit.ly/3xYFakeToken</p>
+<p>5. URL with query params: https://api.endpoint.io/v1/auth?token=abc%20123&redirect=true</p>
+<p>6. Mismatched anchor: <a href="https://actual-malicious-site.com/steal">https://trusted-bank.com/safe</a></p>
+<p>7. Trailing punctuation: Please visit https://finish-line.org/home.</p>
+<p>8. URL with fragment: https://docs.service.net/manual#section-4</p>

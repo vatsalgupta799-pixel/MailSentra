@@ -1,0 +1,7 @@
+From: automated-sensor@facility.io
+To: alerts@facility.io
+Subject: Ambient Temperature Reading Normal
+Date: Tue, 24 Nov 2026 18:30:00 +0000
+Content-Type: text/plain; charset="utf-8"
+
+Notice: This message was emitted by a minimal embedded sensor with no RFC Message-ID.

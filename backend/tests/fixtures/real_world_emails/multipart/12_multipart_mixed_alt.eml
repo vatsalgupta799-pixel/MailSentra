@@ -1,0 +1,34 @@
+From: Research Lab <lab@science-institute.org>
+To: Lead Investigator <pi@science-institute.org>
+Subject: Experiment Run Telemetry #4982
+Date: Tue, 24 Nov 2026 13:00:00 +0000
+Message-ID: <telemetry-4982@science-institute.org>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Part_Outer_Mixed"
+
+------=_Part_Outer_Mixed
+Content-Type: multipart/alternative; boundary="----=_Part_Inner_Alt"
+
+------=_Part_Inner_Alt
+Content-Type: text/plain; charset="utf-8"
+
+Experiment #4982 completed.
+Data summary: 140,000 observations processed.
+Telemetry report is attached.
+
+------=_Part_Inner_Alt
+Content-Type: text/html; charset="utf-8"
+
+<p>Experiment #4982 <strong>completed</strong>.</p>
+<p>Data summary: <em>140,000 observations processed</em>.</p>
+<p>Telemetry report is attached.</p>
+
+------=_Part_Inner_Alt--
+
+------=_Part_Outer_Mixed
+Content-Type: text/plain; name="run_metrics.csv"
+Content-Disposition: attachment; filename="run_metrics.csv"
+
+run_id,temperature,pressure,status
+4982,298.15,101.325,NOMINAL
+------=_Part_Outer_Mixed--

@@ -1,0 +1,15 @@
+From: long-header-tester@boundary.org
+To: analyst@domain.com
+Subject: Unusually Long Header Test Case That Folds Across Multiple RFC 5322 Lines
+	To Test The Capacity Of The Header Extraction Module When Header Lines
+	Are Continuously Folded Using Tabs And Leading Spaces
+	Without Breaking The Normalization Pipeline
+Date: Tue, 24 Nov 2026 20:30:00 +0000
+Message-ID: <long-header-folded-001@boundary.org>
+X-Extended-Custom-Trace-Header: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+	bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+	ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+	ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+Content-Type: text/plain; charset="utf-8"
+
+Testing unfolded header recovery.

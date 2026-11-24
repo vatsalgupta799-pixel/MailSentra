@@ -1,0 +1,16 @@
+Received: from mx-in-01.corp.com (mx-in-01.corp.com [10.0.1.50])
+	by imap.corp.com with ESMTP id h4-1234; Tue, 24 Nov 2026 18:00:04 +0000
+Received: from edge-filter.security.net (edge-filter.security.net [192.0.2.10])
+	by mx-in-01.corp.com with ESMTP id h3-5678; Tue, 24 Nov 2026 18:00:03 +0000
+Received: from relay-out.partner.org (relay-out.partner.org [198.51.100.99])
+	by edge-filter.security.net with ESMTP id h2-9012; Tue, 24 Nov 2026 18:00:02 +0000
+Received: from client-workstation.partner.org (198.51.100.120)
+	by relay-out.partner.org with SMTP id h1-3456; Tue, 24 Nov 2026 18:00:01 +0000
+From: analyst@partner.org
+To: recipient@corp.com
+Subject: Four-Hop Relay Trace Verification
+Date: Tue, 24 Nov 2026 18:00:00 +0000
+Message-ID: <trace-4hop-9988@partner.org>
+Content-Type: text/plain; charset="utf-8"
+
+This email traversed four MTA intermediate hops before final delivery.

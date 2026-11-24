@@ -1,0 +1,20 @@
+From: Payroll Department <payroll@internal-services.com>
+To: accounting@company.com
+Subject: Updated Employee Benefit Schedule
+Date: Tue, 24 Nov 2026 10:11:00 +0000
+Message-ID: <payroll-notice-00192@internal-services.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Part_Susp_Att"
+
+------=_Part_Susp_Att
+Content-Type: text/plain; charset="utf-8"
+
+Please review the attached updated benefit schedule.
+
+------=_Part_Susp_Att
+Content-Type: application/octet-stream
+Content-Disposition: attachment; filename="Q4_Salary_Adjustments.xlsx.exe"
+Content-Transfer-Encoding: base64
+
+TVqQAAMAAAAEAAAA//8A
+------=_Part_Susp_Att--

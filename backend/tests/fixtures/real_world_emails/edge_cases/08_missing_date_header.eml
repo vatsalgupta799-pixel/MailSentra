@@ -1,0 +1,7 @@
+From: cron-daemon@legacy-server.local
+To: root@legacy-server.local
+Subject: Disk Cleanup Executed
+Message-ID: <legacy-cron-no-date-001@legacy-server.local>
+Content-Type: text/plain; charset="utf-8"
+
+Notice: This legacy daemon does not emit a Date header.

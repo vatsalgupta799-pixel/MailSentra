@@ -1,0 +1,8 @@
+From: <<<Invalid Sender Box Without Domain>>>
+To: target@domain.com
+Subject: Malformed Sender Address Header Test
+Date: Tue, 24 Nov 2026 19:00:00 +0000
+Message-ID: <invalid-sender-001@domain.com>
+Content-Type: text/plain; charset="utf-8"
+
+Testing address parser handling of malformed sender string.

@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mailsentra-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - DEBUG=false
+      - SECRET_KEY=${SECRET_KEY:?Error: SECRET_KEY must be explicitly set in production environment}
+      - REQUIRE_INGESTION_AUTH=true
+      - INGESTION_API_KEY=${INGESTION_API_KEY:?Error: INGESTION_API_KEY must be explicitly set in production environment}
+      - DATABASE_URL=sqlite+aiosqlite:///./data/mailsentra.db
+      - ALLOWED_ORIGINS=http://localhost:5173,http://localhost:80
+      - MAX_EMAIL_SIZE_BYTES=15728640
+    volumes:
+      - mailsentra-data:/app/data
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 1024M
+        reservations:
+          cpus: "0.5"
+          memory: 256M
+
+volumes:
+  mailsentra-data:

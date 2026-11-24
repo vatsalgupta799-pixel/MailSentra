@@ -1,0 +1,23 @@
+From: newsletter@design-weekly.com
+To: subscriber@studio.io
+Subject: Design Weekly: Trends of 2027
+Date: Tue, 24 Nov 2026 08:00:00 +0000
+Message-ID: <nl-design-20261124@design-weekly.com>
+Content-Type: text/html; charset="utf-8"
+
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: sans-serif; background: #f4f4f4; }
+    .card { background: #fff; padding: 20px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Top 10 Interface Trends</h1>
+    <p>Discover minimal dark-mode systems and ergonomic typography.</p>
+    <a href="https://design-weekly.com/issue-89">Read Full Issue Online</a>
+  </div>
+</body>
+</html>

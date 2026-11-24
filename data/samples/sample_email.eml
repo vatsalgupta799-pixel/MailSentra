@@ -1,0 +1,66 @@
+From: "Sarah Connor" <sarah.connor@cyberdyne-defense.com>
+To: "John Smith" <jsmith@targetcorp.com>
+Cc: "Audit Team" <audit@targetcorp.com>
+Subject: Urgent Security Assessment - Quarterly Review #Q4
+Date: Tue, 24 Nov 2026 15:30:00 +0000
+Message-ID: <sec-ops-20261124-001@cyberdyne-defense.com>
+Return-Path: <bounce-handler@cyberdyne-defense.com>
+Reply-To: <soc-support@cyberdyne-defense.com>
+Received: from mail-relay.cyberdyne-defense.com ([198.51.100.25]) by mx.targetcorp.com with ESMTP id q4-99882; Tue, 24 Nov 2026 15:30:02 +0000
+Authentication-Results: mx.targetcorp.com; dkim=pass header.i=@cyberdyne-defense.com; spf=pass (targetcorp.com: domain of bounce-handler@cyberdyne-defense.com designates 198.51.100.25 as permitted sender)
+Received-SPF: Pass (mx.targetcorp.com: domain of bounce-handler@cyberdyne-defense.com designates 198.51.100.25 as permitted sender)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyberdyne-defense.com; s=k1; h=from:to:subject:date; bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=; b=dGVzdF9ka2ltX3NpZ25hdHVyZQ==
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Part_MailSentra_10293847"
+
+------=_Part_MailSentra_10293847
+Content-Type: multipart/alternative; boundary="----=_Part_Alt_99887766"
+
+------=_Part_Alt_99887766
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Hi John,
+
+Please review the quarterly security assessment findings. The audit report is attached.
+You can also inspect the telemetry directly in our SOC portal:
+https://portal.cyberdyne-defense.com/audits/q4-report
+
+Best regards,
+Sarah Connor
+Principal Security Analyst
+
+------=_Part_Alt_99887766
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE html>
+<html>
+<head><title>Security Audit</title></head>
+<body>
+  <h2>Quarterly Security Assessment Findings</h2>
+  <p>Hi John,</p>
+  <p>Please review the quarterly security assessment findings. The audit report is attached.</p>
+  <p>You can also inspect the telemetry directly in our SOC portal: 
+    <a href="https://portal.cyberdyne-defense.com/audits/q4-report">SOC Audit Portal</a>
+  </p>
+  <p>For urgent inquiries, reach out to <a href="https://support.cyberdyne-defense.com/tickets">Help Desk</a>.</p>
+</body>
+</html>
+
+------=_Part_Alt_99887766--
+
+------=_Part_MailSentra_10293847
+Content-Type: application/pdf; name="Q4_Security_Assessment.pdf"
+Content-Disposition: attachment; filename="Q4_Security_Assessment.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjUKJcfsj6IKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMiAwIFIK
+Pj4KZW5kb2JqCjIgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9LaWRzIFszIDAgUl0KL0NvdW50
+IDEKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgovTWVk
+aWFCb3ggWzAgMCA2MTIgNzkyXQo+PgplbmRvYmoKMSAwIG9iago8PAovVGl0bGUgKFE0IFNl
+Y3VyaXR5IEFzc2Vzc21lbnQpCj4+CmVuZG9iagp4cmVmCjAgNQowMDAwMDAwMDAwIDY1NTM1
+IGYgCjAwMDAwMDAwMTggMDAwMDAgbiAKMDAwMDAwMDA3MCAwMDAwMCBuIAowMDAwMDAwMTMw
+IDAwMDAwIG4gCjAwMDAwMDAyMDkgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSA1Ci9Sb290
+IDEgMCBSCj4+CnN0YXJ0eHJlZgoyNzAKJSVFT0YK
+------=_Part_MailSentra_10293847--

@@ -1,0 +1,14 @@
+From: sysadmin@localnet.org
+To: operator@localnet.org
+Subject: Daily Backup Cron Completion Summary
+Date: Mon, 24 Nov 2026 04:00:01 +0000
+Message-ID: <cron-backup-20261124-0400@localnet.org>
+Content-Type: text/plain; charset="us-ascii"
+
+BACKUP TASK: FULL DATABASE EXPORT
+STATUS: SUCCESS
+DURATION: 14m 22s
+BYTES WRITTEN: 48,229,190
+DESTINATION: /mnt/storage/backups/daily-20261124.tar.gz
+
+All integrity checksums matched.

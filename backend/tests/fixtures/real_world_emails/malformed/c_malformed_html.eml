@@ -1,0 +1,14 @@
+From: webmaster@corrupt-markup.org
+To: analyst@domain.com
+Subject: Malformed Markup Test
+Date: Tue, 24 Nov 2026 17:30:00 +0000
+Message-ID: <corrupt-markup-001@corrupt-markup.org>
+Content-Type: text/html; charset="utf-8"
+
+<div>
+  <p>Unclosed paragraph tag
+  <a href=http://malformed-no-quotes.com/page?id=123>Link without quotes</a>
+  <script type="text/javascript">
+    document.write('unclosed script tag
+  </script
+  <a href="https://valid-target.com">Valid target link</a>

@@ -1,0 +1,19 @@
+From: test@traversal-tester.org
+To: secops@corp.com
+Subject: Traversal Path Attack Test
+Date: Tue, 24 Nov 2026 15:00:00 +0000
+Message-ID: <traversal-attack-001@traversal-tester.org>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Part_Traversal"
+
+------=_Part_Traversal
+Content-Type: text/plain; charset="utf-8"
+
+Testing filename sanitization for traversal payloads.
+
+------=_Part_Traversal
+Content-Type: text/plain
+Content-Disposition: attachment; filename="../../../../Windows/System32/drivers/etc/hosts"
+
+127.0.0.1 localhost
+------=_Part_Traversal--
