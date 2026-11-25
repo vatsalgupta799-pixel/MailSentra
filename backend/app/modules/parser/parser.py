@@ -93,6 +93,23 @@ class EmailParser(BaseDetectionModule):
         reply_to_raw = msg.get("Reply-To")
         reply_to = parse_email_address(str(reply_to_raw)) if reply_to_raw else None
 
+        # Parse all mailboxes across all From and Reply-To headers
+        all_from_senders: List[EmailAddress] = []
+        for raw_f in headers_map.get("from", []):
+            all_from_senders.extend(
+                parse_address_list(raw_f, max_addresses=settings.MAX_RECIPIENT_ADDRESSES)
+            )
+        if not all_from_senders and from_sender:
+            all_from_senders.append(from_sender)
+
+        all_reply_to: List[EmailAddress] = []
+        for raw_rt in headers_map.get("reply-to", []):
+            all_reply_to.extend(
+                parse_address_list(raw_rt, max_addresses=settings.MAX_RECIPIENT_ADDRESSES)
+            )
+        if not all_reply_to and reply_to:
+            all_reply_to.append(reply_to)
+
         return_path = msg.get("Return-Path")
         if return_path:
             return_path = str(return_path).strip().strip("<>")
@@ -201,6 +218,8 @@ class EmailParser(BaseDetectionModule):
             from_sender=from_sender,
             reply_to=reply_to,
             return_path=return_path,
+            all_from_senders=all_from_senders,
+            all_reply_to=all_reply_to,
             to_recipients=to_recipients,
             cc_recipients=cc_recipients,
             bcc_recipients=bcc_recipients,

@@ -107,6 +107,8 @@ class ParsedEmail(BaseModel):
     from_sender: Optional[EmailAddress] = None
     reply_to: Optional[EmailAddress] = None
     return_path: Optional[str] = None  # Envelope-From
+    all_from_senders: List[EmailAddress] = Field(default_factory=list)
+    all_reply_to: List[EmailAddress] = Field(default_factory=list)
 
     # Recipients
     to_recipients: List[EmailAddress] = Field(default_factory=list)
@@ -148,10 +150,14 @@ class ImpersonationFinding(BaseModel):
 
 
 class IdentityAnalysisResult(BaseModel):
-    envelope_header_match: bool = True
+    envelope_header_match: Optional[bool] = None  # None: unavailable/empty Return-Path; True: aligned; False: unaligned
     display_name_spoofed: bool = False
     typosquatting_detected: bool = False
-    punycode_homoglyph_detected: bool = False
+    punycode_homoglyph_detected: bool = False  # Legacy composite field preserved for backward compatibility
+    punycode_detected: bool = False  # RFC 3492/5891 Punycode domain detected
+    homoglyph_detected: bool = False  # Mixed-script or visual lookalike detected
+    analysis_status: str = "COMPLETED"  # "COMPLETED", "PARTIAL", "FAILED"
+    failed_rules: List[str] = Field(default_factory=list)
     findings: List[ImpersonationFinding] = Field(default_factory=list)
 
 

@@ -9,6 +9,7 @@ from app.models.scan import RiskTier, ScanIncident, ScanStatus
 from app.models.user import User
 from app.modules.contracts import IngestionSource, ParsedEmail, RawEmailPayload
 from app.modules.ingestion.service import EmailIngestionService
+from app.modules.identity.analyzer import SenderIdentityAnalyzer
 from app.modules.parser.parser import EmailParser
 
 
@@ -18,6 +19,7 @@ class ScanService:
     def __init__(self):
         self.ingestion_service = EmailIngestionService()
         self.parser = EmailParser()
+        self.identity_analyzer = SenderIdentityAnalyzer()
 
     async def ingest_and_parse(
         self,
@@ -76,6 +78,25 @@ class ScanService:
         incident_telemetry = parsed_email.model_dump(mode="json")
         incident_telemetry["is_duplicate_message_id"] = is_duplicate
         incident_telemetry["duplicate_reference_scan_id"] = duplicate_ref_id
+
+        # 4. Execute Sender Identity Analysis (Module 3)
+        try:
+            identity_result = await self.identity_analyzer.analyze(parsed_email)
+            incident_telemetry["identity_analysis"] = identity_result.model_dump(mode="json")
+        except Exception as e_ident:
+            logger.error(f"Error during sender identity analysis: {str(e_ident)}", exc_info=True)
+            incident_telemetry["identity_analysis"] = {
+                "analysis_status": "FAILED",
+                "error": "Sender identity analysis encountered an internal error and could not complete.",
+                "envelope_header_match": None,
+                "display_name_spoofed": False,
+                "typosquatting_detected": False,
+                "punycode_homoglyph_detected": False,
+                "punycode_detected": False,
+                "homoglyph_detected": False,
+                "failed_rules": ["identity_analyzer"],
+                "findings": [],
+            }
 
         creator_user_id = getattr(getattr(actor, "user", None), "id", None) if actor else None
         incident = ScanIncident(
