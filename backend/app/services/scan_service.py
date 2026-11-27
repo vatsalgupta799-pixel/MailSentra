@@ -11,6 +11,8 @@ from app.modules.contracts import IngestionSource, ParsedEmail, RawEmailPayload
 from app.modules.ingestion.service import EmailIngestionService
 from app.modules.identity.analyzer import SenderIdentityAnalyzer
 from app.modules.parser.parser import EmailParser
+from app.modules.auth_protocols.analyzer import AuthProtocolsAnalyzer
+from app.modules.contracts import TrustedSMTPMetadata
 
 
 class ScanService:
@@ -20,6 +22,7 @@ class ScanService:
         self.ingestion_service = EmailIngestionService()
         self.parser = EmailParser()
         self.identity_analyzer = SenderIdentityAnalyzer()
+        self.auth_analyzer = AuthProtocolsAnalyzer()
 
     async def ingest_and_parse(
         self,
@@ -30,6 +33,7 @@ class ScanService:
         tenant_id: str = "default",
         db: Optional[AsyncSession] = None,
         actor: Optional[User] = None,
+        trusted_smtp_metadata: Optional[TrustedSMTPMetadata] = None,
     ) -> Tuple[ScanIncident, ParsedEmail]:
         """Ingests raw bytes, parses RFC 5322 data into ParsedEmail, and persists ScanIncident record."""
         # 1. Ingest & Validate
@@ -98,6 +102,27 @@ class ScanService:
                 "findings": [],
             }
 
+        # 5. Execute Authentication Protocols Analysis (Module 4 / Step 3.7.3C)
+        try:
+            auth_result = await self.auth_analyzer.analyze(
+                raw_payload=raw_payload,
+                parsed_email=parsed_email,
+                trusted_smtp_metadata=trusted_smtp_metadata,
+                tenant_id=tenant_id,
+                db=db,
+            )
+            incident_telemetry["auth_protocols"] = auth_result.model_dump(mode="json")
+        except Exception as e_auth:
+            logger.error(f"Error during authentication protocols analysis: {str(e_auth)}", exc_info=True)
+            incident_telemetry["auth_protocols"] = {
+                "analysis_status": "FAILED",
+                "error": f"Authentication protocols analysis encountered an internal error: {str(e_auth)}",
+                "spf_status": "NOT_EVALUATED",
+                "dkim_status": "NONE",
+                "dmarc_status": "NOT_EVALUATED",
+                "failed_evaluators": ["auth_protocols_analyzer"],
+            }
+
         creator_user_id = getattr(getattr(actor, "user", None), "id", None) if actor else None
         incident = ScanIncident(
             scan_uuid=scan_uuid,
@@ -133,6 +158,13 @@ class ScanService:
                 "attachments_count": len(parsed_email.attachments),
                 "urls_count": len(parsed_email.urls),
             }
+            if "auth_protocols" in incident_telemetry:
+                ap = incident_telemetry["auth_protocols"]
+                audit_details["auth_spf"] = ap.get("spf_status")
+                audit_details["auth_dkim"] = ap.get("dkim_status")
+                audit_details["auth_dmarc"] = ap.get("dmarc_status")
+                if isinstance(ap.get("dmarc_enforcement"), dict):
+                    audit_details["dmarc_disposition"] = ap["dmarc_enforcement"].get("disposition")
             AuditLogger.log_event(
                 actor_id=actor_id,
                 action="EMAIL_INGESTED_AND_PARSED",

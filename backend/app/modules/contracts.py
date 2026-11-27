@@ -19,7 +19,7 @@ These immutable Pydantic models represent the pure domain contracts across:
 from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, computed_field, model_validator
 
 
 # ==========================================
@@ -172,6 +172,8 @@ class ProtocolStatus(str, Enum):
     NONE = "NONE"
     PERMERROR = "PERMERROR"
     TEMPERROR = "TEMPERROR"
+    NOT_EVALUATED = "NOT_EVALUATED"
+    INDETERMINATE = "INDETERMINATE"
 
 
 class DMARCPolicy(str, Enum):
@@ -181,7 +183,353 @@ class DMARCPolicy(str, Enum):
     NOT_CONFIGURED = "not_configured"
 
 
+class AnalysisCompletionStatus(str, Enum):
+    COMPLETED = "COMPLETED"
+    PARTIAL = "PARTIAL"
+    FAILED = "FAILED"
+
+
+class AlignmentMode(str, Enum):
+    RELAXED = "r"
+    STRICT = "s"
+
+
+class AuthResultsTrustProvenance(str, Enum):
+    LOCALLY_VERIFIED = "LOCALLY_VERIFIED"
+    TRUSTED_UPSTREAM = "TRUSTED_UPSTREAM"
+    UNTRUSTED_SENDER = "UNTRUSTED_SENDER"
+
+
+class DKIMEvaluationState(str, Enum):
+    """Explicit typed DKIM evaluation completeness states separating missing raw bytes, empty signatures, failures, and internal errors."""
+
+    NOT_EVALUATED_MISSING_RAW_BYTES = "NOT_EVALUATED_MISSING_RAW_BYTES"
+    EVALUATED_NO_SIGNATURES = "EVALUATED_NO_SIGNATURES"
+    EVALUATED_COMPLETED = "EVALUATED_COMPLETED"
+    INCOMPLETE_INTERNAL_ERROR = "INCOMPLETE_INTERNAL_ERROR"
+    INCOMPLETE_TRANSIENT_ERROR = "INCOMPLETE_TRANSIENT_ERROR"
+
+
+class TrustedSMTPMetadata(BaseModel):
+    connecting_ip: Optional[str] = None
+    helo_domain: Optional[str] = None
+    mail_from_envelope: Optional[str] = None
+    is_trusted_mta: bool = False
+    authenticated_connector_id: Optional[str] = None
+    mta_sanitization_guaranteed: bool = False
+
+
+class DKIMSignatureResult(BaseModel):
+    index: int = 0
+    selector: Optional[str] = None
+    domain: Optional[str] = None
+    identity: Optional[str] = None
+    algorithm: Optional[str] = None
+    signature_b_prefix: Optional[str] = None
+    status: ProtocolStatus = ProtocolStatus.NONE
+    evaluation_state: Optional[DKIMEvaluationState] = None
+    reason_code: Optional[str] = None
+    error_reason: Optional[str] = None
+    canonicalization: Optional[str] = None
+    key_size_bits: Optional[int] = None
+    is_aligned_with_from: bool = False
+    aligned_relaxed: bool = False
+    aligned_strict: bool = False
+    alignment_source: str = "uncomputed"
+    alignment_is_authoritative: bool = False
+    standalone_psl_aligned_relaxed: Optional[bool] = None
+
+
+class SPFResult(BaseModel):
+    status: ProtocolStatus = ProtocolStatus.NOT_EVALUATED
+    domain: Optional[str] = None
+    scope: str = "mfrom"
+    identity: Optional[str] = None
+    is_null_reverse_path: bool = False
+    is_synthesized_mfrom: bool = False
+    is_standalone_helo: bool = False
+    evaluated_record: Optional[str] = None
+    mechanisms_evaluated: int = 0
+    dns_terms_queried: int = 0
+    void_lookups: int = 0
+    client_ip: Optional[str] = None
+    error_reason: Optional[str] = None
+
+
+class DMARCResult(BaseModel):
+    status: ProtocolStatus = ProtocolStatus.NOT_EVALUATED
+    standard_status: Optional[str] = None
+    internal_status: Optional[ProtocolStatus] = None
+    policy: DMARCPolicy = DMARCPolicy.NOT_CONFIGURED  # Selected policy per RFC 9989 §4.10.1 (np/sp/p)
+    record_p_policy: Optional[DMARCPolicy] = None  # Literal 'p=' tag from the discovered DNS record
+    subdomain_policy: Optional[DMARCPolicy] = None  # Literal 'sp=' tag from the discovered DNS record
+    non_existent_subdomain_policy: Optional[DMARCPolicy] = None  # Literal 'np=' tag from the discovered DNS record
+    applicable_policy_tag: Optional[str] = None
+    policy_discovery_source: Optional[str] = None
+    policy_domain: Optional[str] = None
+    is_psd_policy: bool = False
+    is_subdomain: bool = False
+    is_subdomain_non_existent: Optional[bool] = None
+    subdomain_existence_probe_enabled: bool = False
+    subdomain_existence_status: Optional[str] = None
+    np_evaluation_skipped_reason: Optional[str] = None
+    test_mode: bool = False
+    org_domain: Optional[str] = None
+    from_domain: Optional[str] = None
+    evaluated_record: Optional[str] = None
+    raw_tags: Dict[str, str] = Field(default_factory=dict)
+    tree_walk_queries: int = 0
+    psd_type: Optional[str] = None
+    spf_aligned: bool = False
+    dkim_aligned: bool = False
+    spf_alignment_mode: AlignmentMode = AlignmentMode.RELAXED
+    dkim_alignment_mode: AlignmentMode = AlignmentMode.RELAXED
+    spf_aligned_relaxed: bool = False
+    spf_aligned_strict: bool = False
+    dkim_aligned_relaxed: bool = False
+    dkim_aligned_strict: bool = False
+    error_reason: Optional[str] = None
+    diagnostics: Dict[str, Any] = Field(default_factory=dict)
+
+    @computed_field
+    @property
+    def rfc_status(self) -> Optional[str]:
+        """Returns the IANA RFC 9989 Section 9.2 standardized DMARC result code.
+
+        Returns:
+            One of 'pass', 'fail', 'none', 'permerror', 'temperror' for actual completed
+            evaluations, or None if the evaluation did not complete to a standardized
+            result (e.g. query limit exhaustion / INDETERMINATE or NOT_EVALUATED).
+            Internal diagnostic states are never silently converted into fail or none.
+        """
+        if self.standard_status is not None:
+            return self.standard_status
+        if self.status == ProtocolStatus.PASS:
+            return "pass"
+        if self.status == ProtocolStatus.FAIL:
+            return "fail"
+        if self.status == ProtocolStatus.NONE:
+            return "none"
+        if self.status == ProtocolStatus.PERMERROR:
+            return "permerror"
+        if self.status == ProtocolStatus.TEMPERROR:
+            return "temperror"
+        # Incomplete evaluations (INDETERMINATE, NOT_EVALUATED) have no standardized RFC 9989 result
+        return None
+
+
+class DMARCDisposition(str, Enum):
+    """Receiver-local disposition outcomes (separate from RFC protocol authentication results)."""
+
+    ACCEPT = "ACCEPT"
+    QUARANTINE = "QUARANTINE"
+    REJECT = "REJECT"
+    RECOMMEND_REJECT = "RECOMMEND_REJECT"
+    DEFER = "DEFER"
+    MANUAL_REVIEW_INCOMPLETE = "MANUAL_REVIEW_INCOMPLETE"
+    RETRY_RECOMMENDED = "RETRY_RECOMMENDED"
+
+
+class PolicyOverrideType(str, Enum):
+    """Standardized policy-override categories aligned with RFC 9990 Section 3.1.6."""
+
+    LOCAL_POLICY = "local_policy"
+    MAILING_LIST = "mailing_list"
+    TRUSTED_FORWARDER = "trusted_forwarder"
+    POLICY_TEST_MODE = "policy_test_mode"
+    OTHER = "other"
+
+
+class OverrideRuleAction(str, Enum):
+    """Configured receiver-local administrative rule actions."""
+
+    EXEMPT_ACCEPT = "EXEMPT_ACCEPT"
+    FORCE_QUARANTINE = "FORCE_QUARANTINE"
+    FORCE_REJECT = "FORCE_REJECT"
+
+
+class LocalPolicyOverrideRule(BaseModel):
+    """Server-side authenticated administrative override or blocklist rule."""
+
+    rule_id: str
+    action: OverrideRuleAction
+    match_from_domain: Optional[str] = None
+    match_org_domain: Optional[str] = None
+    match_sender_address: Optional[str] = None
+    match_ip_or_cidr: Optional[str] = None
+    require_aligned_dkim: bool = False
+    tenant_id: str = "default"
+    configured_by_identity: Optional[str] = None
+    configured_by_role: Optional[str] = None
+    # Note: this Boolean alone is NEVER trusted as proof of authentication when
+    # supplied dynamically; server HMAC provenance is verified by DMARCPolicyEnforcer.
+    is_authenticated_admin_source: bool = False
+    server_provenance_hmac: Optional[str] = None
+    reason: Optional[str] = None
+
+
+class ForwarderTrustEvidence(BaseModel):
+    """Server-verified indirect mail flow evidence (RFC 9989 §7.4 & RFC 7960)."""
+
+    is_verified_forwarder: bool = False
+    is_verified_mailing_list: bool = False
+    connector_id: Optional[str] = None
+    relay_ip: Optional[str] = None
+    evidence_source: Optional[str] = None
+    is_server_verified: bool = False
+
+
+class CorroboratingThreatSignals(BaseModel):
+    """Independent security signals consumed by Stage 4/5 without mutating auth results."""
+
+    confirmed_malicious_attachment: bool = False
+    confirmed_malicious_url: bool = False
+    high_confidence_impersonation: bool = False
+    impersonation_confidence: Optional[float] = None
+    impersonation_provenance_verified: bool = False
+    threat_intel_confirmed_malicious: bool = False
+    verified_corroborating_signals: List[str] = Field(default_factory=list)
+    advisory_identity_analysis: Optional[IdentityAnalysisResult] = None
+    threat_module_provenance: Optional[str] = None
+
+
+class SMTPAdapterDecisionContract(BaseModel):
+    """Pure pre-DATA-reply SMTP disposition contract for future MTA integration (unexecuted)."""
+
+    action: str  # "ACCEPT_250", "QUARANTINE_HOLD", "DEFER_451", "REJECT_550"
+    smtp_reply_code: int
+    enhanced_status_code: str
+    reply_text: str
+    pre_data_reply_required: bool = True
+    executed: bool = False
+
+
+class DMARCEnforcementDecision(BaseModel):
+    """Tier 3 receiver-local policy interpretation and disposition output with complete provenance."""
+
+    # Preserved Tier 2 Authentication Results (never rewritten)
+    spf_status: ProtocolStatus = ProtocolStatus.NOT_EVALUATED
+    dkim_status: ProtocolStatus = ProtocolStatus.NONE
+    dmarc_status: ProtocolStatus = ProtocolStatus.NOT_EVALUATED
+    dmarc_rfc_status: Optional[str] = None
+    from_domain: Optional[str] = None
+    org_domain: Optional[str] = None
+    policy_domain: Optional[str] = None
+
+    # Tier 1 Policy Record Tags & Stage 3 Transformation
+    record_p_policy: DMARCPolicy = DMARCPolicy.NOT_CONFIGURED  # Literal 'p=' tag from DNS record
+    selected_applicable_policy: DMARCPolicy = DMARCPolicy.NOT_CONFIGURED  # RFC 9989 §4.10.1 selection (np/sp/p)
+    applicable_policy_tag: Optional[str] = None
+    policy_discovery_source: Optional[str] = None
+    test_mode: bool = False
+    test_mode_applied: bool = False
+    effective_policy: DMARCPolicy = DMARCPolicy.NOT_CONFIGURED  # Stage 3 policy after t=y transformation
+
+    # Stage 4 RFC 9989 §7.4 & Indirect Flow Interoperability
+    interoperability_downgrade_applied: bool = False
+    interoperability_adjustment_reason: Optional[str] = None
+    post_interop_policy: DMARCPolicy = DMARCPolicy.NOT_CONFIGURED
+    forwarder_exempted: bool = False
+    mailing_list_exempted: bool = False
+    unverified_indirect_flow_claim_ignored: bool = False
+
+    # Stage 5 Local Policy & Conflict Arbitration
+    local_override_applied: bool = False
+    override_reasons: List[PolicyOverrideType] = Field(default_factory=list)
+    matched_rule_ids: List[str] = Field(default_factory=list)
+    rejected_unauthenticated_rules: List[str] = Field(default_factory=list)
+    policy_conflict_detected: bool = False
+    conflict_details: List[str] = Field(default_factory=list)
+    threat_block_applied: bool = False
+    advisory_signals: Dict[str, Any] = Field(default_factory=dict)
+    local_policy_inputs: Dict[str, Any] = Field(default_factory=dict)
+
+    # Stage 6 Channel Mapping & Audit Evidence
+    channel: IngestionSource = IngestionSource.DIRECT_UPLOAD
+    channel_mode: str = "http_inspection"
+    disposition: DMARCDisposition = DMARCDisposition.ACCEPT
+    decision_reason: str = "DMARC_NOT_EVALUATED"
+    decision_summary: str = ""
+    policy_applied: bool = False
+    manual_review_recommended: bool = False
+    retry_recommended: bool = False
+    raw_bytes_modified: bool = False
+    smtp_contract: Optional[SMTPAdapterDecisionContract] = None
+    diagnostic_evidence: Dict[str, Any] = Field(default_factory=dict)
+    audit_metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+class ParsedAuthResultItem(BaseModel):
+    method: str
+    status: ProtocolStatus = ProtocolStatus.NONE
+    reason: Optional[str] = None
+    header_property: Optional[str] = None
+    property_value: Optional[str] = None
+    properties: Dict[str, str] = Field(default_factory=dict)
+
+
+class ParsedAuthResultsHeader(BaseModel):
+    authserv_id: str
+    version: Optional[int] = None
+    provenance: AuthResultsTrustProvenance = AuthResultsTrustProvenance.UNTRUSTED_SENDER
+    is_trusted: bool = False
+    authserv_id_matched_config: bool = False
+    authenticated_connector_id: Optional[str] = None
+    mta_sanitization_guaranteed: bool = False
+    trust_evidence_reason: str = "Unverified sender-supplied header or missing MTA trust boundary"
+    results: List[ParsedAuthResultItem] = Field(default_factory=list)
+    raw_header: str
+
+    @model_validator(mode="after")
+    def validate_trust_boundary(self) -> "ParsedAuthResultsHeader":
+        if self.provenance == AuthResultsTrustProvenance.LOCALLY_VERIFIED:
+            self.is_trusted = True
+            if not self.trust_evidence_reason or self.trust_evidence_reason.startswith("Unverified"):
+                self.trust_evidence_reason = "Locally verified by MailSentra"
+        elif self.provenance == AuthResultsTrustProvenance.TRUSTED_UPSTREAM:
+            # RFC 8601 Section 5: authserv-id match alone NEVER establishes trust.
+            # Must satisfy all three mandatory conditions:
+            # 1. Matching configured trusted authserv-id
+            # 2. Authenticated upstream connector identity
+            # 3. Explicit MTA sanitization / trust-boundary guarantee
+            if not (
+                self.authserv_id_matched_config
+                and self.authenticated_connector_id
+                and self.mta_sanitization_guaranteed
+            ):
+                self.provenance = AuthResultsTrustProvenance.UNTRUSTED_SENDER
+                self.is_trusted = False
+                self.trust_evidence_reason = (
+                    "Insufficient trust evidence: authserv-id match without authenticated connector "
+                    "and MTA sanitization guarantee remains untrusted."
+                )
+            else:
+                self.is_trusted = True
+                if not self.trust_evidence_reason or self.trust_evidence_reason.startswith("Unverified"):
+                    self.trust_evidence_reason = (
+                        f"Trusted upstream from connector '{self.authenticated_connector_id}' "
+                        "with MTA sanitization guarantee."
+                    )
+        else:
+            self.provenance = AuthResultsTrustProvenance.UNTRUSTED_SENDER
+            self.is_trusted = False
+            if not self.trust_evidence_reason or self.trust_evidence_reason.startswith("Locally"):
+                self.trust_evidence_reason = (
+                    "Unverified sender-supplied header or missing MTA trust boundary"
+                )
+        return self
+
+
+class AuthFinding(BaseModel):
+    code: str
+    protocol: str
+    severity: str = "INFO"
+    message: str
+    details: Dict[str, Any] = Field(default_factory=dict)
+
+
 class AuthProtocolsResult(BaseModel):
+    # Core Protocol Statuses (preserved for backward compatibility)
     spf_status: ProtocolStatus = ProtocolStatus.NONE
     spf_domain: Optional[str] = None
     dkim_status: ProtocolStatus = ProtocolStatus.NONE
@@ -191,6 +539,50 @@ class AuthProtocolsResult(BaseModel):
     dmarc_aligned_spf: bool = False
     dmarc_aligned_dkim: bool = False
     raw_auth_results_header: Optional[str] = None
+    generated_auth_results_header: Optional[str] = None
+
+    # Extended Alignment Outcomes
+    spf_alignment_mode: AlignmentMode = AlignmentMode.RELAXED
+    dkim_alignment_mode: AlignmentMode = AlignmentMode.RELAXED
+    spf_aligned_relaxed: bool = False
+    spf_aligned_strict: bool = False
+    dkim_aligned_relaxed: bool = False
+    dkim_aligned_strict: bool = False
+    dmarc_test_mode: bool = False
+
+    # Detailed Evaluator Structures
+    spf_details: Optional[SPFResult] = None
+    dkim_evaluation_state: Optional[DKIMEvaluationState] = None
+    dkim_signatures: List[DKIMSignatureResult] = Field(default_factory=list)
+    dmarc_details: Optional[DMARCResult] = None
+    dmarc_enforcement: Optional[DMARCEnforcementDecision] = None
+    parsed_auth_results: List[ParsedAuthResultsHeader] = Field(default_factory=list)
+
+    # Completion and Failure Telemetry
+    analysis_status: AnalysisCompletionStatus = AnalysisCompletionStatus.COMPLETED
+    failed_evaluators: List[str] = Field(default_factory=list)
+    findings: List[AuthFinding] = Field(default_factory=list)
+    execution_telemetry: Dict[str, Any] = Field(default_factory=dict)
+
+    def get_trusted_auth_results(self) -> List[ParsedAuthResultsHeader]:
+        """Returns only headers verified locally or received from authenticated upstream connectors.
+
+        Untrusted sender-supplied headers (UNTRUSTED_SENDER) are strictly filtered out to
+        prevent attacker-controlled headers from overriding or influencing security decisions.
+        """
+        return [h for h in self.parsed_auth_results if h.is_trusted]
+
+    def has_untrusted_spoofed_auth_results(self) -> bool:
+        """Returns True if any Authentication-Results header claims a matching authserv-id
+        or successful authentication but lacks authenticated connector evidence."""
+        return any(
+            not h.is_trusted
+            and (
+                h.authserv_id_matched_config
+                or any(item.status == ProtocolStatus.PASS for item in h.results)
+            )
+            for h in self.parsed_auth_results
+        )
 
 
 # ==========================================
