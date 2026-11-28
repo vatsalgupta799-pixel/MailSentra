@@ -84,8 +84,44 @@ def _sanitize_reconstructed_header(
     return stripped if stripped else default
 
 
+def compute_binary_classification_metrics(
+    tp: int, fp: int, tn: int, fn: int
+) -> Dict[str, Optional[float]]:
+    """Calculates binary classification performance metrics with mathematically sound null handling.
+
+    Mathematical Invariants:
+        - Precision: tp / (tp + fp) if (tp + fp) > 0 else None
+        - Recall: tp / (tp + fn) if (tp + fn) > 0 else None
+        - Specificity: tn / (tn + fp) if (tn + fp) > 0 else None
+        - False Positive Rate (FPR): fp / (tn + fp) if (tn + fp) > 0 else None
+        - F1 Score: (2 * precision * recall) / (precision + recall) if precision and recall are defined
+          and (precision + recall) > 0 else (0.0 if precision is not None and recall is not None else None)
+    """
+    precision = round(tp / (tp + fp), 4) if (tp + fp) > 0 else None
+    recall = round(tp / (tp + fn), 4) if (tp + fn) > 0 else None
+    specificity = round(tn / (tn + fp), 4) if (tn + fp) > 0 else None
+    fpr = round(fp / (tn + fp), 4) if (tn + fp) > 0 else None
+
+    if precision is None or recall is None:
+        f1 = None
+    elif (precision + recall) > 0:
+        f1 = round((2 * precision * recall) / (precision + recall), 4)
+    else:
+        f1 = 0.0
+
+    return {
+        "precision": precision,
+        "recall": recall,
+        "specificity": specificity,
+        "f1": f1,
+        "fpr": fpr,
+    }
+
+
 class DatasetEvaluator:
     """Executes genuine evaluation runs across normalized dataset samples using production modules."""
+
+    compute_metrics = staticmethod(compute_binary_classification_metrics)
 
     def __init__(self, offline_auth: bool = True, fixture_mode: bool = False):
         self.offline_auth = offline_auth
@@ -246,7 +282,7 @@ class DatasetEvaluator:
                     "total_tested": 0,
                     "error": "Deterministic split yielded empty test partition. Benchmark fallback to training data prohibited to prevent train/test leakage.",
                     "tp": 0, "fp": 0, "tn": 0, "fn": 0,
-                    "precision": 0.0, "recall": 0.0, "specificity": 0.0, "f1": 0.0, "fpr": 0.0,
+                    "precision": None, "recall": None, "specificity": None, "f1": None, "fpr": None,
                     "partition_fallback_applied": False,
                     "evaluation_mode": "BENCHMARK_STRICT",
                     "details": [],
@@ -289,11 +325,7 @@ class DatasetEvaluator:
                 "reason": finding.reason,
             })
 
-        precision = tp / (tp + fp) if (tp + fp) > 0 else (1.0 if tp == 0 and fp == 0 else 0.0)
-        recall = tp / (tp + fn) if (tp + fn) > 0 else (1.0 if tp == 0 and fn == 0 else 0.0)
-        specificity = tn / (tn + fp) if (tn + fp) > 0 else (1.0 if tn == 0 and fp == 0 else 0.0)
-        f1 = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
-        fpr = fp / (fp + tn) if (fp + tn) > 0 else 0.0
+        metrics = compute_binary_classification_metrics(tp, fp, tn, fn)
 
         return {
             "category": "malicious_urls",
@@ -302,11 +334,11 @@ class DatasetEvaluator:
             "fp": fp,
             "tn": tn,
             "fn": fn,
-            "precision": round(precision, 4),
-            "recall": round(recall, 4),
-            "specificity": round(specificity, 4),
-            "f1": round(f1, 4),
-            "fpr": round(fpr, 4),
+            "precision": metrics["precision"],
+            "recall": metrics["recall"],
+            "specificity": metrics["specificity"],
+            "f1": metrics["f1"],
+            "fpr": metrics["fpr"],
             "partition_fallback_applied": partition_fallback_applied,
             "evaluation_mode": evaluation_mode,
             "details": details,
@@ -408,7 +440,7 @@ class DatasetEvaluator:
                     "total_tested": 0,
                     "error": "Deterministic split yielded empty test partition. Benchmark fallback to training data prohibited to prevent train/test leakage.",
                     "tp": 0, "fp": 0, "tn": 0, "fn": 0,
-                    "precision": 0.0, "recall": 0.0, "specificity": 0.0, "f1": 0.0, "fpr": 0.0,
+                    "precision": None, "recall": None, "specificity": None, "f1": None, "fpr": None,
                     "partition_fallback_applied": False,
                     "evaluation_mode": "BENCHMARK_STRICT",
                     "details": [],
@@ -502,11 +534,7 @@ class DatasetEvaluator:
                 detail_item["payload_warning"] = payload_warning
             details.append(detail_item)
 
-        precision = tp / (tp + fp) if (tp + fp) > 0 else (1.0 if tp == 0 and fp == 0 else 0.0)
-        recall = tp / (tp + fn) if (tp + fn) > 0 else (1.0 if tp == 0 and fn == 0 else 0.0)
-        specificity = tn / (tn + fp) if (tn + fp) > 0 else (1.0 if tn == 0 and fp == 0 else 0.0)
-        f1 = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
-        fpr = fp / (fp + tn) if (fp + tn) > 0 else 0.0
+        metrics = compute_binary_classification_metrics(tp, fp, tn, fn)
 
         return {
             "category": "malware_attachments",
@@ -515,11 +543,11 @@ class DatasetEvaluator:
             "fp": fp,
             "tn": tn,
             "fn": fn,
-            "precision": round(precision, 4),
-            "recall": round(recall, 4),
-            "specificity": round(specificity, 4),
-            "f1": round(f1, 4),
-            "fpr": round(fpr, 4),
+            "precision": metrics["precision"],
+            "recall": metrics["recall"],
+            "specificity": metrics["specificity"],
+            "f1": metrics["f1"],
+            "fpr": metrics["fpr"],
             "partition_fallback_applied": partition_fallback_applied,
             "evaluation_mode": evaluation_mode,
             "details": details,
@@ -557,7 +585,7 @@ class DatasetEvaluator:
                     "total_tested": 0,
                     "error": "Deterministic split yielded empty test partition. Benchmark fallback to training data prohibited to prevent train/test leakage.",
                     "tp": 0, "fp": 0, "tn": 0, "fn": 0,
-                    "precision": 0.0, "recall": 0.0, "specificity": 0.0, "f1": 0.0, "fpr": 0.0,
+                    "precision": None, "recall": None, "specificity": None, "f1": None, "fpr": None,
                     "partition_fallback_applied": False,
                     "evaluation_mode": "BENCHMARK_STRICT",
                     "module_telemetry": module_telemetry,
@@ -640,11 +668,7 @@ class DatasetEvaluator:
                 "attachments_count": len(parsed_email.attachments),
             })
 
-        precision = tp / (tp + fp) if (tp + fp) > 0 else (1.0 if tp == 0 and fp == 0 else 0.0)
-        recall = tp / (tp + fn) if (tp + fn) > 0 else (1.0 if tp == 0 and fn == 0 else 0.0)
-        specificity = tn / (tn + fp) if (tn + fp) > 0 else (1.0 if tn == 0 and fn == 0 else 0.0)
-        f1 = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
-        fpr = fp / (fp + tn) if (fp + tn) > 0 else 0.0
+        metrics = compute_binary_classification_metrics(tp, fp, tn, fn)
 
         return {
             "category": category.value,
@@ -653,11 +677,11 @@ class DatasetEvaluator:
             "fp": fp,
             "tn": tn,
             "fn": fn,
-            "precision": round(precision, 4),
-            "recall": round(recall, 4),
-            "specificity": round(specificity, 4),
-            "f1": round(f1, 4),
-            "fpr": round(fpr, 4),
+            "precision": metrics["precision"],
+            "recall": metrics["recall"],
+            "specificity": metrics["specificity"],
+            "f1": metrics["f1"],
+            "fpr": metrics["fpr"],
             "partition_fallback_applied": partition_fallback_applied,
             "evaluation_mode": evaluation_mode,
             "module_telemetry": module_telemetry,

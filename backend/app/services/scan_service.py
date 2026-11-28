@@ -146,6 +146,17 @@ class ScanService:
         try:
             url_result = await self.url_analyzer.analyze(parsed_email)
             incident_telemetry["url_analysis"] = url_result.model_dump(mode="json")
+
+            # Map findings and consequence analysis back onto parsed_email.urls so the upload response and frontend have direct access
+            if url_result and url_result.findings and parsed_email.urls:
+                findings_by_url = {f.url: f for f in url_result.findings}
+                for u in parsed_email.urls:
+                    finding_match = findings_by_url.get(u.original_url) or findings_by_url.get(u.normalized_url)
+                    if finding_match:
+                        u.finding = finding_match.model_dump(mode="json")
+                        u.consequences = finding_match.consequences
+                        u.post_click_guidance = finding_match.post_click_guidance
+                incident_telemetry["urls"] = [u.model_dump(mode="json") for u in parsed_email.urls]
         except Exception as e_url:
             logger.error(f"Error during URL security analysis: {str(e_url)}", exc_info=True)
             incident_telemetry["url_analysis"] = {
@@ -254,6 +265,32 @@ class ScanService:
                 await db.commit()
             except Exception as e:
                 logger.error(f"Failed to persist audit record to database: {str(e)}")
+
+            # Generate security alert for qualifying findings (MALICIOUS or high-confidence threat signals)
+            if risk_tier == RiskTier.MALICIOUS or risk_score >= 70.0:
+                try:
+                    from app.models.alert import Alert, AlertSeverity, AlertStatus
+                    alert_severity = AlertSeverity.CRITICAL if risk_score >= 85.0 else AlertSeverity.HIGH
+                    alert_title = f"High-Risk Email Threat Detected: {parsed_email.subject or 'Untitled'}"[:255]
+                    alert_desc = f"Scan #{incident.id} flagged as {risk_tier.value} with Risk Score {risk_score}. {verdict_summary}"
+                    alert_obj = Alert(
+                        scan_id=incident.id,
+                        title=alert_title,
+                        severity=alert_severity,
+                        status=AlertStatus.OPEN,
+                        description=alert_desc,
+                        indicators={
+                            "scan_uuid": scan_uuid,
+                            "sender": sender_col,
+                            "risk_tier": risk_tier.value,
+                            "risk_score": risk_score,
+                            "signals": risk_assessment.get("contributing_signals", []) if isinstance(risk_assessment, dict) else [],
+                        },
+                    )
+                    db.add(alert_obj)
+                    await db.commit()
+                except Exception as e_alert:
+                    logger.error(f"Failed to create security alert for scan #{incident.id}: {str(e_alert)}")
 
         subj_len = len(parsed_email.subject) if parsed_email.subject else 0
         logger.info(

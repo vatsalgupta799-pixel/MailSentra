@@ -26,6 +26,20 @@ export interface ScanIncident {
   updated_at: string;
 }
 
+export interface DashboardStats {
+  total_scanned: number;
+  clean_count: number;
+  suspicious_count: number;
+  malicious_count: number;
+  high_risk_findings_count: number;
+  threat_detection_rate: number;
+  active_alerts_count: number;
+}
+
+export interface ScanDetail extends ScanIncident {
+  telemetry: Record<string, any>;
+}
+
 export interface SecurityAlert {
   id: number;
   scan_id: number | null;
@@ -56,6 +70,21 @@ export interface EmailAddress {
   domain: string;
 }
 
+export interface LinkConsequences {
+  threat_category: string;
+  category_title: string;
+  risk_summary: string;
+  what_could_happen: string[];
+  risk_distinctions: string[];
+}
+
+export interface PostClickGuidance {
+  scenario: string;
+  scenario_label: string;
+  recommended_actions: string[];
+  urgency_level: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+}
+
 export interface ExtractedUrl {
   original_url: string;
   normalized_url: string;
@@ -64,6 +93,15 @@ export interface ExtractedUrl {
   source_location: string;
   is_duplicate: boolean;
   occurrence_count: number;
+  finding?: {
+    severity: string;
+    reason: string;
+    is_ip_host?: boolean;
+    is_suspicious_tld?: boolean;
+    is_open_redirect?: boolean;
+  } | null;
+  consequences?: LinkConsequences | null;
+  post_click_guidance?: PostClickGuidance[] | null;
 }
 
 export interface AttachmentMetadata {

@@ -43,3 +43,13 @@ class EmailParseResponse(BaseModel):
     status: ScanStatus
     parsed_email: ParsedEmail
     created_at: datetime
+
+
+class DashboardStatsResponse(BaseModel):
+    total_scanned: int = 0
+    clean_count: int = 0
+    suspicious_count: int = 0
+    malicious_count: int = 0
+    high_risk_findings_count: int = 0
+    threat_detection_rate: float = 0.0
+    active_alerts_count: int = 0

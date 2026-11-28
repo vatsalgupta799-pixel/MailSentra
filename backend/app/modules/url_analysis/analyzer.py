@@ -15,6 +15,7 @@ from app.modules.contracts import (
     UrlRiskSeverity,
 )
 from app.modules.url_analysis.config import UrlAnalysisConfig
+from app.modules.url_analysis.consequences import consequence_evaluator
 from app.modules.url_analysis.hostname_analyzer import HostnameAnalyzer
 from app.modules.url_analysis.normalizer import UrlNormalizer
 from app.modules.url_analysis.risk_scorer import RiskScorer
@@ -106,6 +107,22 @@ class UrlAnalyzer(BaseDetectionModule):
         )
         is_open_redirect = any(s.signal.value == "OPEN_REDIRECT_PARAM" for s in signals)
 
+        # Human-friendly consequence evaluation & post-click guidance
+        consequence_data = None
+        guidance_data = None
+        if severity != UrlRiskSeverity.SAFE:
+            sig_names = [s.signal.value for s in signals]
+            eval_result = consequence_evaluator.evaluate(
+                url=url,
+                severity=severity,
+                reason=reason,
+                signals=sig_names,
+            )
+            if eval_result:
+                consequence_data = eval_result.model_dump(mode="json")
+                guidance_list = consequence_evaluator.get_all_post_click_scenarios()
+                guidance_data = [g.model_dump(mode="json") for g in guidance_list]
+
         return UrlFinding(
             url=url,
             defanged_url=defanged,
@@ -116,6 +133,8 @@ class UrlAnalyzer(BaseDetectionModule):
             redirect_chain=[],
             severity=severity,
             reason=reason,
+            consequences=consequence_data,
+            post_click_guidance=guidance_data,
         )
 
     async def shutdown(self) -> None:

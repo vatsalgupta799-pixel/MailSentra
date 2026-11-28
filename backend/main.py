@@ -84,6 +84,10 @@ async def lifespan(app: FastAPI):
                 session.add(default_admin)
                 await session.commit()
                 logger.info("Development environment: Provisioned development administrator (admin@mailsentra.local).")
+            elif not admin.is_active:
+                admin.is_active = True
+                await session.commit()
+                logger.info("Development environment: Re-activated development administrator (admin@mailsentra.local).")
         else:
             # Production: deactivate legacy development default admin if it was accidentally copied into database
             legacy_stmt = select(User).where(User.email == "admin@mailsentra.local")

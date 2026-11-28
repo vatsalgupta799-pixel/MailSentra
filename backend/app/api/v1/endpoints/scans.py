@@ -15,6 +15,7 @@ from app.modules.ingestion.exceptions import (
     MalformedPayloadError,
 )
 from app.schemas.scan import (
+    DashboardStatsResponse,
     EmailParseResponse,
     RawEmailParseRequest,
     ScanDetailResponse,
@@ -185,6 +186,56 @@ def authorize_scan_incident_access(actor: IngestionActor, scan: ScanIncident) ->
     raise HTTPException(
         status_code=status.HTTP_403_FORBIDDEN,
         detail=f"User role '{actor.role}' is not authorized to access scan incident telemetry.",
+    )
+
+
+@router.get("/stats", response_model=DashboardStatsResponse, summary="Get Aggregate SOC Dashboard Metrics")
+async def get_dashboard_stats(
+    db: AsyncSession = Depends(get_db),
+    actor: IngestionActor = Depends(get_scan_reader),
+):
+    """Computes accurate, tenant-scoped lifetime aggregate metrics across all stored scan incidents."""
+    from sqlalchemy import func
+    from app.models.alert import Alert, AlertStatus
+    from app.models.scan import RiskTier
+
+    tenant_filter = []
+    if actor.role != UserRole.SUPER_ADMIN.value and actor.identity != "dev:unauthenticated":
+        user_obj = getattr(actor, "user", None)
+        user_tenant = getattr(user_obj, "tenant_id", "default") if user_obj else "default"
+        tenant_filter.append(ScanIncident.tenant_id == user_tenant)
+
+    # 1. Total counts by RiskTier across the complete database
+    stmt = select(ScanIncident.risk_tier, func.count(ScanIncident.id)).where(*tenant_filter).group_by(ScanIncident.risk_tier)
+    res = await db.execute(stmt)
+    tier_counts = dict(res.all())
+
+    clean = tier_counts.get(RiskTier.CLEAN, 0)
+    suspicious = tier_counts.get(RiskTier.SUSPICIOUS, 0)
+    malicious = tier_counts.get(RiskTier.MALICIOUS, 0)
+    total = clean + suspicious + malicious
+
+    # 2. High risk count (scans with risk_score >= 70.0)
+    high_risk_stmt = select(func.count(ScanIncident.id)).where(ScanIncident.risk_score >= 70.0, *tenant_filter)
+    high_risk_res = await db.execute(high_risk_stmt)
+    high_risk_count = high_risk_res.scalar_one_or_none() or 0
+
+    # 3. Active open alerts count
+    alert_stmt = select(func.count(Alert.id)).where(Alert.status.in_([AlertStatus.OPEN, AlertStatus.IN_TRIAGE]))
+    alert_res = await db.execute(alert_stmt)
+    active_alerts = alert_res.scalar_one_or_none() or 0
+
+    # 4. Threat detection rate = (suspicious + malicious) / total * 100
+    detection_rate = round(((suspicious + malicious) / total * 100.0), 1) if total > 0 else 0.0
+
+    return DashboardStatsResponse(
+        total_scanned=total,
+        clean_count=clean,
+        suspicious_count=suspicious,
+        malicious_count=malicious,
+        high_risk_findings_count=high_risk_count,
+        threat_detection_rate=detection_rate,
+        active_alerts_count=active_alerts,
     )
 
 

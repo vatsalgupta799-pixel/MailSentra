@@ -82,6 +82,9 @@ class ExtractedUrl(BaseModel):
     source_attribute: Optional[str] = None
     is_duplicate: bool = False
     occurrence_count: int = 1
+    finding: Optional[Dict[str, Any]] = None
+    consequences: Optional[Dict[str, Any]] = None
+    post_click_guidance: Optional[List[Dict[str, Any]]] = None
 
 
 class AttachmentMetadata(BaseModel):
@@ -610,6 +613,8 @@ class UrlFinding(BaseModel):
     redirect_chain: List[str] = Field(default_factory=list)
     severity: UrlRiskSeverity = UrlRiskSeverity.SAFE
     reason: str = ""
+    consequences: Optional[Dict[str, Any]] = None
+    post_click_guidance: Optional[List[Dict[str, Any]]] = None
 
 
 class UrlAnalysisResult(BaseModel):
