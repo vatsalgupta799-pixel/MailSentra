@@ -12,6 +12,9 @@ from app.modules.ingestion.service import EmailIngestionService
 from app.modules.identity.analyzer import SenderIdentityAnalyzer
 from app.modules.parser.parser import EmailParser
 from app.modules.auth_protocols.analyzer import AuthProtocolsAnalyzer
+from app.modules.url_analysis.analyzer import UrlAnalyzer
+from app.modules.attachment_analysis.analyzer import AttachmentAnalyzer
+from app.modules.risk_engine.engine import RiskEngine
 from app.modules.contracts import TrustedSMTPMetadata
 
 
@@ -23,6 +26,20 @@ class ScanService:
         self.parser = EmailParser()
         self.identity_analyzer = SenderIdentityAnalyzer()
         self.auth_analyzer = AuthProtocolsAnalyzer()
+        self.url_analyzer = UrlAnalyzer()
+        self.attachment_analyzer = AttachmentAnalyzer()
+        self.risk_engine = RiskEngine()
+
+    async def shutdown(self):
+        """Closes all owned subsystem resources cleanly."""
+        try:
+            await self.auth_analyzer.shutdown()
+        except Exception as e:
+            logger.error(f"Error during AuthProtocolsAnalyzer shutdown: {e}")
+        try:
+            await self.url_analyzer.shutdown()
+        except Exception as e:
+            logger.error(f"Error during UrlAnalyzer shutdown: {e}")
 
     async def ingest_and_parse(
         self,
@@ -103,6 +120,7 @@ class ScanService:
             }
 
         # 5. Execute Authentication Protocols Analysis (Module 4 / Step 3.7.3C)
+        auth_result = None
         try:
             auth_result = await self.auth_analyzer.analyze(
                 raw_payload=raw_payload,
@@ -123,6 +141,49 @@ class ScanService:
                 "failed_evaluators": ["auth_protocols_analyzer"],
             }
 
+        # 6. Execute URL Security Analysis (Module 5 / Step 4.2)
+        url_result = None
+        try:
+            url_result = await self.url_analyzer.analyze(parsed_email)
+            incident_telemetry["url_analysis"] = url_result.model_dump(mode="json")
+        except Exception as e_url:
+            logger.error(f"Error during URL security analysis: {str(e_url)}", exc_info=True)
+            incident_telemetry["url_analysis"] = {
+                "analysis_status": "FAILED",
+                "error": f"URL analysis encountered an internal error: {str(e_url)}",
+                "total_urls_scanned": 0,
+                "highest_severity": "SAFE",
+                "findings": [],
+            }
+
+        # 7. Execute Attachment Forensic Analysis (Module 6)
+        attachment_result = None
+        try:
+            attachment_result = await self.attachment_analyzer.analyze(parsed_email, raw_payload=raw_payload)
+            incident_telemetry["attachment_analysis"] = attachment_result.model_dump(mode="json")
+        except Exception as e_att:
+            logger.error(f"Error during attachment forensic analysis: {str(e_att)}", exc_info=True)
+            incident_telemetry["attachment_analysis"] = {
+                "analysis_status": "FAILED",
+                "error": f"Attachment analysis encountered an internal error: {str(e_att)}",
+                "total_attachments": len(parsed_email.attachments),
+                "suspicious_count": 0,
+                "malicious_count": 0,
+                "highest_severity": "SAFE",
+                "findings": [],
+            }
+
+        # 8. Risk Aggregation & Threat Classification (Risk Engine)
+        risk_score, risk_tier, verdict_summary, risk_assessment = self.risk_engine.evaluate(
+            identity_result=identity_result if 'identity_result' in locals() and hasattr(identity_result, 'findings') else None,
+            auth_result=auth_result,
+            url_result=url_result,
+            attachment_result=attachment_result,
+        )
+        if is_duplicate:
+            verdict_summary += f" [DUPLICATE: Matches prior scan incident #{duplicate_ref_id}]"
+        incident_telemetry["risk_assessment"] = risk_assessment
+
         creator_user_id = getattr(getattr(actor, "user", None), "id", None) if actor else None
         incident = ScanIncident(
             scan_uuid=scan_uuid,
@@ -133,8 +194,8 @@ class ScanService:
             status=ScanStatus.COMPLETED,
             tenant_id=tenant_id or "default",
             created_by_user_id=creator_user_id,
-            risk_score=0.0,
-            risk_tier=RiskTier.PENDING,
+            risk_score=risk_score,
+            risk_tier=risk_tier,
             verdict_summary=verdict_summary,
             telemetry=incident_telemetry,
         )
@@ -157,6 +218,8 @@ class ScanService:
                 "subject": (parsed_email.subject[:80] + "...") if parsed_email.subject and len(parsed_email.subject) > 80 else parsed_email.subject,
                 "attachments_count": len(parsed_email.attachments),
                 "urls_count": len(parsed_email.urls),
+                "risk_tier": risk_tier.value,
+                "risk_score": risk_score,
             }
             if "auth_protocols" in incident_telemetry:
                 ap = incident_telemetry["auth_protocols"]
@@ -198,6 +261,11 @@ class ScanService:
         )
 
         return incident, parsed_email
+
+    async def shutdown(self) -> None:
+        """Cleanly releases underlying resources for authentication analyzer and threat modules."""
+        if hasattr(self, "auth_analyzer") and self.auth_analyzer:
+            await self.auth_analyzer.shutdown()
 
 
 scan_service = ScanService()

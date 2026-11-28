@@ -1,8 +1,13 @@
 """Application configuration management using Pydantic Settings."""
 
-from typing import List, Optional, Union
+import re
+from typing import Any, List, Optional, Union
 from pydantic import AnyHttpUrl, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+AUTHSERV_ID_PATTERN = re.compile(
+    r"^(?=.{1,255}$)[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)*$"
+)
 
 
 class Settings(BaseSettings):
@@ -47,6 +52,35 @@ class Settings(BaseSettings):
     # Initial Administrator Bootstrap (Optional for Production First-Run)
     INITIAL_ADMIN_EMAIL: Optional[str] = None
     INITIAL_ADMIN_PASSWORD: Optional[str] = None
+
+    # Module 4: Authentication Protocols Operational Settings (Step 3.7.4)
+    LOCAL_AUTHSERV_ID: Optional[str] = None
+    DMARC_POLICY_ENFORCEMENT_ENABLED: bool = True
+
+    @field_validator("LOCAL_AUTHSERV_ID", mode="before")
+    @classmethod
+    def _validate_local_authserv_id(cls, value: Any) -> Optional[str]:
+        if value is None:
+            return None
+        if not isinstance(value, str):
+            raise ValueError("LOCAL_AUTHSERV_ID must be a string or None.")
+        if not value.strip():
+            return None
+        # Disallow control characters, whitespace, semicolons, quotes, colons, slashes
+        if any(ord(c) < 33 or ord(c) > 126 or c in ';:"\'/\\[]()<>' for c in value):
+            raise ValueError(
+                f"LOCAL_AUTHSERV_ID contains disallowed whitespace, control characters, or delimiters: '{value}'"
+            )
+        clean_val = value.strip()
+        if len(clean_val) > 255:
+            raise ValueError(
+                f"LOCAL_AUTHSERV_ID exceeds maximum RFC 8601 length of 255 characters (length={len(clean_val)})."
+            )
+        if not AUTHSERV_ID_PATTERN.match(clean_val):
+            raise ValueError(
+                f"LOCAL_AUTHSERV_ID must conform to RFC 8601 Section 2.5 FQDN/atom syntax: '{clean_val}'"
+            )
+        return clean_val
 
     @property
     def is_ingestion_auth_enforced(self) -> bool:

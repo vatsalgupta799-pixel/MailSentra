@@ -1,0 +1,1259 @@
+{
+  "manifest_version": "1.0.0",
+  "corpus_name": "MailSentra Synthetic Threat Validation Corpus",
+  "total_fixtures": 75,
+  "category_counts": {
+    "phishing": 20,
+    "malware_delivery": 15,
+    "spoofing_authentication": 10,
+    "business_email_compromise": 10,
+    "advanced_adversarial": 10,
+    "legitimate": 10
+  },
+  "fixtures": [
+    {
+      "test_id": "CORPUS-PHISH-01",
+      "filename": "phishing/phish_01.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD",
+        "ORGANIZATIONAL_ROLE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "ROLE_SPOOFING"
+      ],
+      "expected_url_findings": [
+        "http://university-verify.xyz/login.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Impersonates university IT desk using high-risk .xyz domain to harvest academic SSO credentials."
+    },
+    {
+      "test_id": "CORPUS-PHISH-02",
+      "filename": "phishing/phish_02.eml",
+      "category": "phishing",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "TYPOSQUATTING_HOSTNAME",
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://m365-security-portal.top/auth.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Typosquatted sender domain (micros0ft) combined with high-risk .top TLD phishing destination."
+    },
+    {
+      "test_id": "CORPUS-PHISH-03",
+      "filename": "phishing/phish_03.eml",
+      "category": "phishing",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "TYPOSQUATTING_HOSTNAME",
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://accounts-google.review/checkpoint.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Google brand typosquatting (g00gle) paired with high-risk .review TLD credential harvester."
+    },
+    {
+      "test_id": "CORPUS-PHISH-04",
+      "filename": "phishing/phish_04.eml",
+      "category": "phishing",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "IP_HOST_PRIVATE",
+        "SUSPICIOUS"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "http://192.168.1.50/chase-online.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "RFC 1918 private IP URL used directly as host in bank suspension lure."
+    },
+    {
+      "test_id": "CORPUS-PHISH-05",
+      "filename": "phishing/phish_05.eml",
+      "category": "phishing",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD",
+        "OPEN_REDIRECT_PARAM"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://pay-portal.xyz/billing/retry.invalid?url=http://attacker.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Payment failure notification using .xyz TLD with embedded open redirect parameter."
+    },
+    {
+      "test_id": "CORPUS-PHISH-06",
+      "filename": "phishing/phish_06.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://parcel-tracking.download/dhl.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Courier delivery lure using high-risk .download top-level domain."
+    },
+    {
+      "test_id": "CORPUS-PHISH-07",
+      "filename": "phishing/phish_07.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://irs-direct-refund.loan/claim.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Government agency impersonation using high-risk .loan top-level domain."
+    },
+    {
+      "test_id": "CORPUS-PHISH-08",
+      "filename": "phishing/phish_08.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://streaming-billing.stream/invoice.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Subscription service renewal lure hosted on high-risk .stream TLD."
+    },
+    {
+      "test_id": "CORPUS-PHISH-09",
+      "filename": "phishing/phish_09.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://auth0-reset.trade/password.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Enterprise SSO password reset prompt hosted on suspicious .trade TLD."
+    },
+    {
+      "test_id": "CORPUS-PHISH-10",
+      "filename": "phishing/phish_10.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://mfa-checkpoint.date/verify.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "MFA token enrollment lure on high-risk .date TLD to hijack 2FA sessions."
+    },
+    {
+      "test_id": "CORPUS-PHISH-11",
+      "filename": "phishing/phish_11.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://cloud-share.party/view.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Document sharing impersonation using high-risk .party TLD."
+    },
+    {
+      "test_id": "CORPUS-PHISH-12",
+      "filename": "phishing/phish_12.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD",
+        "ORGANIZATIONAL_ROLE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "ROLE_SPOOFING"
+      ],
+      "expected_url_findings": [
+        "https://hr-portal.faith/benefits.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Internal HR benefit enrollment spoofing on high-risk .faith TLD."
+    },
+    {
+      "test_id": "CORPUS-PHISH-13",
+      "filename": "phishing/phish_13.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD",
+        "ORGANIZATIONAL_ROLE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "ROLE_SPOOFING"
+      ],
+      "expected_url_findings": [
+        "https://scholarship-awards.win/accept.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Academic scholarship award lure targeting students on high-risk .win TLD."
+    },
+    {
+      "test_id": "CORPUS-PHISH-14",
+      "filename": "phishing/phish_14.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://internships-apply.racing/offer.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Student career internship lure hosted on high-risk .racing TLD."
+    },
+    {
+      "test_id": "CORPUS-PHISH-15",
+      "filename": "phishing/phish_15.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD",
+        "ORGANIZATIONAL_ROLE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "ROLE_SPOOFING"
+      ],
+      "expected_url_findings": [
+        "https://portal-exams.accountant/grades.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Grade release notification phishing on high-risk .accountant TLD."
+    },
+    {
+      "test_id": "CORPUS-PHISH-16",
+      "filename": "phishing/phish_16.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://bursar-tuition.bid/pay.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Tuition fee collection lure on high-risk .bid TLD."
+    },
+    {
+      "test_id": "CORPUS-PHISH-17",
+      "filename": "phishing/phish_17.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://docusign-envelope.work/sign.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "DocuSign brand impersonation requesting electronic signature on .work TLD."
+    },
+    {
+      "test_id": "CORPUS-PHISH-18",
+      "filename": "phishing/phish_18.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD",
+        "ORGANIZATIONAL_ROLE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "ROLE_SPOOFING"
+      ],
+      "expected_url_findings": [
+        "https://payroll-services.club/login.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Payroll portal credential phishing targeting W-2 forms on .club TLD."
+    },
+    {
+      "test_id": "CORPUS-PHISH-19",
+      "filename": "phishing/phish_19.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://recovery-center.pw/restore.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Account recovery security alert hosted on high-risk .pw TLD."
+    },
+    {
+      "test_id": "CORPUS-PHISH-20",
+      "filename": "phishing/phish_20.eml",
+      "category": "phishing",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD",
+        "OPEN_REDIRECT_PARAM"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://corporate-survey.club/step1.invalid?redirect=https://evil.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Internal compliance survey lure leading through an open redirect chain."
+    },
+    {
+      "test_id": "CORPUS-MALWARE-01",
+      "filename": "malware_delivery/malware_01.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_EXTENSION",
+        "EXECUTABLE_ATTACHMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Invoice_Nov2026.exe",
+          "content_type": "application/x-msdownload"
+        }
+      ],
+      "rationale": "Direct executable attachment disguised as billing invoice."
+    },
+    {
+      "test_id": "CORPUS-MALWARE-02",
+      "filename": "malware_delivery/malware_02.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "ARCHIVE_CONTAINER"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Remittance_Proof.zip",
+          "content_type": "application/zip"
+        }
+      ],
+      "rationale": "Compressed archive delivery intended to evade perimeter attachment inspection."
+    },
+    {
+      "test_id": "CORPUS-MALWARE-03",
+      "filename": "malware_delivery/malware_03.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "DOUBLE_EXTENSION",
+        "SUSPICIOUS_EXTENSION"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Invoice_URGENT_OVERDUE_PAYMENT_NOW.pdf.exe",
+          "content_type": "application/x-msdownload"
+        }
+      ],
+      "rationale": "Double extension masking Windows executable with deceptive uppercase PDF prefix."
+    },
+    {
+      "test_id": "CORPUS-MALWARE-04",
+      "filename": "malware_delivery/malware_04.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "DOUBLE_EXTENSION",
+        "SUSPICIOUS_EXTENSION"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Employee_Benefits_2026.xlsx.exe",
+          "content_type": "application/x-msdownload"
+        }
+      ],
+      "rationale": "Malicious double extension masquerading as Excel spreadsheet."
+    },
+    {
+      "test_id": "CORPUS-MALWARE-05",
+      "filename": "malware_delivery/malware_05.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "MACRO_CAPABLE_DOCUMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Purchase_Order_PO991.docm",
+          "content_type": "application/vnd.ms-word.document.macroEnabled.12"
+        }
+      ],
+      "rationale": "Macro-enabled Word document capable of hosting malicious VBA payload."
+    },
+    {
+      "test_id": "CORPUS-MALWARE-06",
+      "filename": "malware_delivery/malware_06.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SCRIPT_ATTACHMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Statement_Browser.js",
+          "content_type": "application/javascript"
+        }
+      ],
+      "rationale": "Standalone client-side JavaScript file delivered as email attachment."
+    },
+    {
+      "test_id": "CORPUS-MALWARE-07",
+      "filename": "malware_delivery/malware_07.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SCRIPT_ATTACHMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Install_System_Update.ps1",
+          "content_type": "text/plain"
+        }
+      ],
+      "rationale": "PowerShell execution script attachment targeting enterprise workstations."
+    },
+    {
+      "test_id": "CORPUS-MALWARE-08",
+      "filename": "malware_delivery/malware_08.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "HTML_ATTACHMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Payment_Voucher.html",
+          "content_type": "text/html"
+        }
+      ],
+      "rationale": "HTML attachment containing local credential-harvesting form."
+    },
+    {
+      "test_id": "CORPUS-MALWARE-09",
+      "filename": "malware_delivery/malware_09.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "DISK_IMAGE_ATTACHMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Software_Bundle.iso",
+          "content_type": "application/x-iso9660-image"
+        }
+      ],
+      "rationale": "ISO optical disk image used to bypass Mark-of-the-Web security controls."
+    },
+    {
+      "test_id": "CORPUS-MALWARE-10",
+      "filename": "malware_delivery/malware_10.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "DISK_IMAGE_ATTACHMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Receipt_Archive.img",
+          "content_type": "application/octet-stream"
+        }
+      ],
+      "rationale": "Raw disk image container intended to mount virtual filesystems upon user click."
+    },
+    {
+      "test_id": "CORPUS-MALWARE-11",
+      "filename": "malware_delivery/malware_11.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "ENCRYPTED_ARCHIVE"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Confidential_Docs_pass123.zip",
+          "content_type": "application/zip"
+        }
+      ],
+      "rationale": "Password-protected ZIP container designed to prevent gateway AV extraction."
+    },
+    {
+      "test_id": "CORPUS-MALWARE-12",
+      "filename": "malware_delivery/malware_12.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "BINARY_LIBRARY_ATTACHMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "SecurEngine.dll",
+          "content_type": "application/x-msdownload"
+        }
+      ],
+      "rationale": "Direct Dynamic Link Library attachment capable of side-loading attacks."
+    },
+    {
+      "test_id": "CORPUS-MALWARE-13",
+      "filename": "malware_delivery/malware_13.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SHORTCUT_ATTACHMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Open_Invoice.lnk",
+          "content_type": "application/x-ms-shortcut"
+        }
+      ],
+      "rationale": "Windows Shell Link LNK shortcut designed to execute remote command lines."
+    },
+    {
+      "test_id": "CORPUS-MALWARE-14",
+      "filename": "malware_delivery/malware_14.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "COMPRESSED_ARCHIVE"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Contract_Draft.tar.gz",
+          "content_type": "application/gzip"
+        }
+      ],
+      "rationale": "Tarball archive delivery concealing internal document payloads."
+    },
+    {
+      "test_id": "CORPUS-MALWARE-15",
+      "filename": "malware_delivery/malware_15.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_EXTENSION_IN_URL",
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://cdn-download.xyz/updater.exe.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Drive-by executable download lure linking directly to .exe on high-risk .xyz TLD."
+    },
+    {
+      "test_id": "CORPUS-SPOOF-01",
+      "filename": "spoofing_authentication/spoof_01.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "VIP_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "VIP_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "President name in display header sent from external unauthorized webmail provider."
+    },
+    {
+      "test_id": "CORPUS-SPOOF-02",
+      "filename": "spoofing_authentication/spoof_02.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "FROM_REPLYTO_MISMATCH"
+      ],
+      "expected_sender_anomalies": [
+        "FROM_REPLYTO_MISMATCH"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Legitimate From header address coupled with deceptive external Reply-To domain."
+    },
+    {
+      "test_id": "CORPUS-SPOOF-03",
+      "filename": "spoofing_authentication/spoof_03.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "TYPOSQUATTING_HOSTNAME"
+      ],
+      "expected_sender_anomalies": [
+        "TYPOSQUATTING_HOSTNAME"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Typosquatted domain substituting numeral 0 for letter o (stanf0rd.edu)."
+    },
+    {
+      "test_id": "CORPUS-SPOOF-04",
+      "filename": "spoofing_authentication/spoof_04.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SPF_FAIL"
+      ],
+      "expected_sender_anomalies": [
+        "SPF_FAIL"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Envelope IP originates from rogue unauthorized relay failing SPF validation."
+    },
+    {
+      "test_id": "CORPUS-SPOOF-05",
+      "filename": "spoofing_authentication/spoof_05.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "DKIM_FAIL"
+      ],
+      "expected_sender_anomalies": [
+        "DKIM_FAIL"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Cryptographic body hash signature fails DKIM verification due to tampering."
+    },
+    {
+      "test_id": "CORPUS-SPOOF-06",
+      "filename": "spoofing_authentication/spoof_06.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "DMARC_FAIL"
+      ],
+      "expected_sender_anomalies": [
+        "DMARC_FAIL"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Header From asserts strict DMARC domain while SPF and DKIM completely unaligned."
+    },
+    {
+      "test_id": "CORPUS-SPOOF-07",
+      "filename": "spoofing_authentication/spoof_07.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SPOOFED_AUTH_RESULTS"
+      ],
+      "expected_sender_anomalies": [
+        "SPOOFED_AUTH_RESULTS"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Inbound untrusted message injecting pre-forged Authentication-Results header."
+    },
+    {
+      "test_id": "CORPUS-SPOOF-08",
+      "filename": "spoofing_authentication/spoof_08.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "FROM_RETURN_PATH_MISMATCH"
+      ],
+      "expected_sender_anomalies": [
+        "FROM_RETURN_PATH_MISMATCH"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Legitimate From header accompanied by suspicious bounce relay Return-Path."
+    },
+    {
+      "test_id": "CORPUS-SPOOF-09",
+      "filename": "spoofing_authentication/spoof_09.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "EMPLOYEE_IMPERSONATION",
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [
+        "EMPLOYEE_IMPERSONATION",
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Display name of internal engineer sent from external lookalike portal on .xyz."
+    },
+    {
+      "test_id": "CORPUS-SPOOF-10",
+      "filename": "spoofing_authentication/spoof_10.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SENDER_HEADER_CONFLICT"
+      ],
+      "expected_sender_anomalies": [
+        "SENDER_HEADER_CONFLICT"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Conflicting From and Sender headers asserting disjoint identity boundaries."
+    },
+    {
+      "test_id": "CORPUS-BEC-01",
+      "filename": "business_email_compromise/bec_01.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Fake CEO payment request."
+    },
+    {
+      "test_id": "CORPUS-BEC-02",
+      "filename": "business_email_compromise/bec_02.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Vendor bank-account change."
+    },
+    {
+      "test_id": "CORPUS-BEC-03",
+      "filename": "business_email_compromise/bec_03.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Urgent wire transfer request."
+    },
+    {
+      "test_id": "CORPUS-BEC-04",
+      "filename": "business_email_compromise/bec_04.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Fake invoice approval."
+    },
+    {
+      "test_id": "CORPUS-BEC-05",
+      "filename": "business_email_compromise/bec_05.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Payroll diversion."
+    },
+    {
+      "test_id": "CORPUS-BEC-06",
+      "filename": "business_email_compromise/bec_06.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Gift-card fraud."
+    },
+    {
+      "test_id": "CORPUS-BEC-07",
+      "filename": "business_email_compromise/bec_07.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Fake procurement request."
+    },
+    {
+      "test_id": "CORPUS-BEC-08",
+      "filename": "business_email_compromise/bec_08.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Executive impersonation."
+    },
+    {
+      "test_id": "CORPUS-BEC-09",
+      "filename": "business_email_compromise/bec_09.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Confidential financial document request."
+    },
+    {
+      "test_id": "CORPUS-BEC-10",
+      "filename": "business_email_compromise/bec_10.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Supplier payment redirection."
+    },
+    {
+      "test_id": "CORPUS-ADV-01",
+      "filename": "advanced_adversarial/adv_01.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "HOMOGRAPH_HOSTNAME"
+      ],
+      "expected_sender_anomalies": [
+        "HOMOGRAPH_SENDER"
+      ],
+      "expected_url_findings": [
+        "http://\u0430pple.com/verify.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Cyrillic homoglyph character used in sending domain and URL hostname."
+    },
+    {
+      "test_id": "CORPUS-ADV-02",
+      "filename": "advanced_adversarial/adv_02.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "ZERO_WIDTH_UNICODE"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://pay\u200bpal.com/verify.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Zero-width space U+200B inserted into brand name to bypass string matching filters."
+    },
+    {
+      "test_id": "CORPUS-ADV-03",
+      "filename": "advanced_adversarial/adv_03.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "KNOWN_SHORTENER"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://bit.ly/3xYObfuscatedShortener"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Known URL shortening service used to conceal true HTTP landing destination."
+    },
+    {
+      "test_id": "CORPUS-ADV-04",
+      "filename": "advanced_adversarial/adv_04.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "IP_HOST_PRIVATE",
+        "KNOWN_SHORTENER"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "http://10.0.0.1/admin-portal.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Combines private RFC 1918 management IP address with shortened redirection link."
+    },
+    {
+      "test_id": "CORPUS-ADV-05",
+      "filename": "advanced_adversarial/adv_05.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "OPEN_REDIRECT_PARAM"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://login.example.com/oauth/auth?redirect_uri=https://evil.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Abuse of trusted identity provider using an unvalidated redirect_uri parameter."
+    },
+    {
+      "test_id": "CORPUS-ADV-06",
+      "filename": "advanced_adversarial/adv_06.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD",
+        "ANCHOR_TEXT_MISMATCH"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "http://actual-malicious-portal.xyz/login.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Visible anchor text displays trusted banking domain while href links to malicious .xyz portal."
+    },
+    {
+      "test_id": "CORPUS-ADV-07",
+      "filename": "advanced_adversarial/adv_07.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "EXCESSIVE_URGENCY",
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://secure-restore.xyz/account.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Artificial temporal coercion combined with high-risk .xyz destination."
+    },
+    {
+      "test_id": "CORPUS-ADV-08",
+      "filename": "advanced_adversarial/adv_08.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "QR_CODE_PHISHING_LURE"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "authenticator_qr.png"
+        }
+      ],
+      "rationale": "Quishing lure instructing recipient to scan an embedded QR graphic on mobile."
+    },
+    {
+      "test_id": "CORPUS-ADV-09",
+      "filename": "advanced_adversarial/adv_09.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "MIME_STRUCTURE_ANOMALY"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Malformed nested MIME multipart boundary designed to trigger parser exceptions."
+    },
+    {
+      "test_id": "CORPUS-ADV-10",
+      "filename": "advanced_adversarial/adv_10.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "IP_HOST_LOOPBACK",
+        "IP_HOST_ENCODED"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "http://0x7f000001/admin.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Legitimate newsletter text concealing an obfuscated hexadecimal loopback URL."
+    },
+    {
+      "test_id": "CORPUS-LEGIT-01",
+      "filename": "legitimate/legit_01.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Standard academic registrar schedule announcement."
+    },
+    {
+      "test_id": "CORPUS-LEGIT-02",
+      "filename": "legitimate/legit_02.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Classroom location change notification from authenticated university departmental address."
+    },
+    {
+      "test_id": "CORPUS-LEGIT-03",
+      "filename": "legitimate/legit_03.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Standard automated reminder from enterprise educational LMS platform."
+    },
+    {
+      "test_id": "CORPUS-LEGIT-04",
+      "filename": "legitimate/legit_04.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Authenticated recruitment interview invitation from primary corporate domain."
+    },
+    {
+      "test_id": "CORPUS-LEGIT-05",
+      "filename": "legitimate/legit_05.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Routine monthly banking statement notification with standard HTTPS banking URL."
+    },
+    {
+      "test_id": "CORPUS-LEGIT-06",
+      "filename": "legitimate/legit_06.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Monthly cloud infrastructure billing invoice with genuine portal link."
+    },
+    {
+      "test_id": "CORPUS-LEGIT-07",
+      "filename": "legitimate/legit_07.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Standard post-change confirmation notice sent after successful user-initiated password update."
+    },
+    {
+      "test_id": "CORPUS-LEGIT-08",
+      "filename": "legitimate/legit_08.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Internal corporate wellness announcement distributed across legitimate intranet portal."
+    },
+    {
+      "test_id": "CORPUS-LEGIT-09",
+      "filename": "legitimate/legit_09.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Standard collaborative document sharing invitation from Google Workspace."
+    },
+    {
+      "test_id": "CORPUS-LEGIT-10",
+      "filename": "legitimate/legit_10.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Standard calendar meeting invitation containing Google Meet collaboration link."
+    }
+  ]
+}

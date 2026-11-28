@@ -1,0 +1,32 @@
+[
+  {
+    "id": "BC-SAMP-01",
+    "subject": "Quarterly Operations Review Meeting - Notes & Action Items",
+    "body": "Hi team, attached are the meeting minutes from yesterday's sync. Please review your respective action items before our follow-up on Friday.",
+    "label": "ham",
+    "source": "DS-BC-01",
+    "provenance_nature": "SYNTHETIC_FIXTURE_MOCK",
+    "is_synthetic_fixture": true,
+    "transformation_notes": "Manually constructed test mock representing routine corporate meeting coordination."
+  },
+  {
+    "id": "BC-SAMP-02",
+    "subject": "University Library: Requested Book Arrival Notice",
+    "body": "The book you reserved ('Foundations of Computer Security') is now ready for pick-up at the front circulation desk. Please claim it within 7 days.",
+    "label": "ham",
+    "source": "DS-BC-02",
+    "provenance_nature": "SYNTHETIC_FIXTURE_MOCK",
+    "is_synthetic_fixture": true,
+    "transformation_notes": "Manually constructed test mock representing benign academic notification."
+  },
+  {
+    "id": "BC-SAMP-03",
+    "subject": "[PATCH v2] net: core: optimize skb packet header allocation",
+    "body": "This patch avoids redundant buffer reallocation when processing incoming jumbo frames. Tested on 100GbE NICs with zero regression.",
+    "label": "ham",
+    "source": "DS-BC-15",
+    "provenance_nature": "SYNTHETIC_FIXTURE_MOCK",
+    "is_synthetic_fixture": true,
+    "transformation_notes": "Manually constructed test mock representing open-source mailing list patch email."
+  }
+]

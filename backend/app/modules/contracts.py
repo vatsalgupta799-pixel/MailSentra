@@ -77,7 +77,9 @@ class ExtractedUrl(BaseModel):
     normalized_url: str
     defanged_url: str
     visible_text: Optional[str] = None
-    source_location: str = "body"  # "plain_text", "html_href", or "html_text"
+    source_location: str = "body"  # "plain_text", "html_href", "html_area", "html_iframe", "html_form", "html_text"
+    source_tag: Optional[str] = None
+    source_attribute: Optional[str] = None
     is_duplicate: bool = False
     occurrence_count: int = 1
 
@@ -93,6 +95,7 @@ class AttachmentMetadata(BaseModel):
     content_disposition: str = "attachment"
     content_id: Optional[str] = None
     is_inline: bool = False
+    raw_payload: Optional[bytes] = Field(default=None, repr=False, exclude=True)
 
 
 class ParsedEmail(BaseModel):
@@ -626,11 +629,21 @@ class AttachmentFinding(BaseModel):
     sha256_hash: str
     severity: str = "SAFE"
     details: str = ""
+    detected_format: Optional[str] = None
+    is_double_extension: bool = False
+    is_archive: bool = False
+    archive_has_traversal: bool = False
+    extracted_archive_names: List[str] = Field(default_factory=list)
+    analysis_status: str = "COMPLETED"
+    error_message: Optional[str] = None
 
 
 class AttachmentAnalysisResult(BaseModel):
     total_attachments: int = 0
     suspicious_count: int = 0
+    malicious_count: int = 0
+    highest_severity: str = "SAFE"
+    analysis_status: str = "COMPLETED"
     findings: List[AttachmentFinding] = Field(default_factory=list)
 
 

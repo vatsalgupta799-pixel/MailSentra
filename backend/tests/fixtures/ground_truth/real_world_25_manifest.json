@@ -1,0 +1,296 @@
+{
+  "manifest_schema_version": "1.0.0",
+  "manifest_name": "MailSentra Real-World 25 Scenarios Ground-Truth Manifest",
+  "corpus_id": "REAL_WORLD_25",
+  "created_at": "2026-11-27T16:50:00+05:30",
+  "provenance_declaration": "Fixtures authored and committed in git commit dab34b8 (Day 1 architecture). Ground-truth classifications established in HONEST_DETECTION_EVALUATION_REPORT.md and formalized in this manifest on 2026-11-27. No claim of pre-evaluation lock prior to 2026-11-27.",
+  "corpus_relative_path": "../real_world_emails",
+  "total_fixtures": 25,
+  "evaluation_summary": {
+    "total_evaluated_in_classification": 20,
+    "total_excluded_robustness": 5,
+    "ground_truth_counts": {
+      "LEGITIMATE": 12,
+      "MALICIOUS": 8,
+      "CORRUPTED": 4,
+      "ANOMALY": 1
+    }
+  },
+  "fixtures": [
+    {
+      "id": "RW-01",
+      "filename": "normal/01_university_announcement.eml",
+      "sha256": "60900aafd39315184bc23c23784d163efee20b5c55a4dfd8f5c1ab9435e29788",
+      "size_bytes": 1507,
+      "ground_truth_classification": "LEGITIMATE",
+      "threat_category": "normal",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Normal academic announcement with legitimate university URLs.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-02",
+      "filename": "normal/02_genuine_password_reset.eml",
+      "sha256": "e42b03359944fa735b567f5bec4c85c89f10447412a5286327fb66112acdc8db",
+      "size_bytes": 1521,
+      "ground_truth_classification": "LEGITIMATE",
+      "threat_category": "normal",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Genuine GitHub password reset notification with valid DKIM signatures.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-03",
+      "filename": "normal/11_plain_text.eml",
+      "sha256": "680884c7915c834801427d2b05ff40dd985f819d14889fe5cf6a1d23ce6af6ea",
+      "size_bytes": 421,
+      "ground_truth_classification": "LEGITIMATE",
+      "threat_category": "normal",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Routine automated system backup cron notification in plain text.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-04",
+      "filename": "multipart/10_html_only.eml",
+      "sha256": "ef7b25e496c5eca997d4d442f1767fff1f5d1e53ebbf4df0f9f6240c03bfa5ea",
+      "size_bytes": 653,
+      "ground_truth_classification": "LEGITIMATE",
+      "threat_category": "multipart",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Clean corporate weekly newsletter in HTML-only format with benign links.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-05",
+      "filename": "multipart/12_multipart_mixed_alt.eml",
+      "sha256": "47647bcdf33a3445215de18bfd77844c51345d0b2b0f076da739aa5f96695a2e",
+      "size_bytes": 1043,
+      "ground_truth_classification": "LEGITIMATE",
+      "threat_category": "multipart",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Internal analytics status report with benign run_metrics.csv attachment.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-06",
+      "filename": "attachments/15_multiple_attachments.eml",
+      "sha256": "c6e7bd8c06497422b7928015f665687c783c54af0a989cc5018c3d109527009e",
+      "size_bytes": 1490,
+      "ground_truth_classification": "LEGITIMATE",
+      "threat_category": "attachments",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Multi-attachment archival package (PDF, TXT, ZIP) all with benign contents.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-07",
+      "filename": "edge_cases/06_multiple_received_hops.eml",
+      "sha256": "fd2fe2f4f546299306f6fb2fa0d6d98d45bfd081e17d4869bfed3cbcc0ca0233",
+      "size_bytes": 885,
+      "ground_truth_classification": "LEGITIMATE",
+      "threat_category": "edge_cases",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Internal multi-hop routing headers across trusted intermediate MTA relays.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-08",
+      "filename": "edge_cases/07_missing_message_id.eml",
+      "sha256": "da97d962d0924d6ae9c3637df57841d2e15aa7630421bf3b4fd411139e261a90",
+      "size_bytes": 269,
+      "ground_truth_classification": "LEGITIMATE",
+      "threat_category": "edge_cases",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Automated IoT sensor telemetry notification lacking optional Message-ID header.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-09",
+      "filename": "edge_cases/08_missing_date_header.eml",
+      "sha256": "b54e673f15a3c00f00e5cb65eb6a46f521f32ea574ccbf2091d4c23963138eee",
+      "size_bytes": 255,
+      "ground_truth_classification": "LEGITIMATE",
+      "threat_category": "edge_cases",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Legacy maintenance script report lacking optional Date header.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-10",
+      "filename": "edge_cases/14_unicode_international.eml",
+      "sha256": "8612c6ea25f761b98a3b22b2dfa6bc3c9805dfdb1b0db6660a2d986b80f0e85a",
+      "size_bytes": 611,
+      "ground_truth_classification": "LEGITIMATE",
+      "threat_category": "edge_cases",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Legitimate multilingual correspondence with UTF-8 Arabic, Chinese and Cyrillic text.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-11",
+      "filename": "edge_cases/17_unusually_long_headers.eml",
+      "sha256": "a8b0871a63ffc53124262ca1eda929bfb7796c571cc68bfdded91087b06dad84",
+      "size_bytes": 772,
+      "ground_truth_classification": "LEGITIMATE",
+      "threat_category": "edge_cases",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Diagnostic broadcast containing unusually long folded header lines.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-12",
+      "filename": "edge_cases/19_encoded_subjects.eml",
+      "sha256": "84932d5ac12a536f2237704382b955a0379648ae2b7199b9ff0b7f20fa87fff1",
+      "size_bytes": 329,
+      "ground_truth_classification": "LEGITIMATE",
+      "threat_category": "edge_cases",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "International academic invitation with ISO-8859-1 quoted-printable encoded subject.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-13",
+      "filename": "malformed/b_empty_payload.eml",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "ground_truth_classification": "CORRUPTED",
+      "threat_category": "malformed",
+      "evaluation_applicability": "EXCLUDED_ROBUSTNESS",
+      "rationale": "Zero-byte empty payload testing boundary rejection by ingestion service.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-14",
+      "filename": "malformed/b_truncated_email.eml",
+      "sha256": "362643ebd6f75919d142721c9298a2b0f8bdfb0536355229934f8d6c4d82700a",
+      "size_bytes": 267,
+      "ground_truth_classification": "CORRUPTED",
+      "threat_category": "malformed",
+      "evaluation_applicability": "EXCLUDED_ROBUSTNESS",
+      "rationale": "Truncated stream lacking MIME body testing boundary stream handling.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-15",
+      "filename": "malformed/18_malformed_mime_boundaries.eml",
+      "sha256": "ad45433784e8c66fdc28c89c4c4ba5187ef157f963e9428bf3730a9cc3ae0644",
+      "size_bytes": 553,
+      "ground_truth_classification": "CORRUPTED",
+      "threat_category": "malformed",
+      "evaluation_applicability": "EXCLUDED_ROBUSTNESS",
+      "rationale": "Broken and mismatched MIME boundary markers testing parser crash-resistance.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-16",
+      "filename": "malformed/c_malformed_html.eml",
+      "sha256": "011268c3d3df0f405b337e2e7d78e53ff6ed6feede802b636429492d9be9938a",
+      "size_bytes": 476,
+      "ground_truth_classification": "CORRUPTED",
+      "threat_category": "malformed",
+      "evaluation_applicability": "EXCLUDED_ROBUSTNESS",
+      "rationale": "Broken unclosed HTML tags testing HTML tag stripper and parser robustness.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-17",
+      "filename": "edge_cases/09_invalid_sender_address.eml",
+      "sha256": "24c050a8e27790bbd5e9853308da07b6f40ca358029b0cefe9e5983b8dea172b",
+      "size_bytes": 299,
+      "ground_truth_classification": "ANOMALY",
+      "threat_category": "edge_cases",
+      "evaluation_applicability": "EXCLUDED_ROBUSTNESS",
+      "rationale": "RFC 5322 protocol syntax anomaly with empty angle brackets From: <>.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-18",
+      "filename": "suspicious/03_fake_admin.eml",
+      "sha256": "e425144c75f3481bb23809d28ae856f9a208c2bc49f787eb218d8559a732f0b0",
+      "size_bytes": 818,
+      "ground_truth_classification": "MALICIOUS",
+      "threat_category": "phishing_impersonation",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Credential harvesting lure impersonating university Dean pointing to .xyz domain.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-19",
+      "filename": "suspicious/04_display_name_spoofing.eml",
+      "sha256": "ce67742a3515355f495c4a479231307036ccc41eab6b48bfb5e58bee73c662c3",
+      "size_bytes": 538,
+      "ground_truth_classification": "MALICIOUS",
+      "threat_category": "bec_impersonation",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Executive display name spoofing impersonating university President for wire transfer.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-20",
+      "filename": "suspicious/05_mismatched_from_replyto.eml",
+      "sha256": "a1f7dec333328d95c0e41e5932a60760a0ca8d723c8b2e45627f1b786902398d",
+      "size_bytes": 607,
+      "ground_truth_classification": "MALICIOUS",
+      "threat_category": "credential_phishing",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Banking credential phishing with mismatched From (chase.com) and Reply-To (secure-resolve-tickets.net).",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-21",
+      "filename": "suspicious/16_suspicious_attachment_filename.eml",
+      "sha256": "18f98f034df11b031d4d20706a8be3aad0bd77bc2834ba2862ee1e177c9d4a3d",
+      "size_bytes": 638,
+      "ground_truth_classification": "MALICIOUS",
+      "threat_category": "malware_delivery",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Malicious attachment disguised with double extension (.xlsx.exe) and Payroll role spoofing.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-22",
+      "filename": "edge_cases/13_several_urls.eml",
+      "sha256": "409afa6f6f4ce423cf46e760be38f86086058f41be0c82c155de32c015d10726",
+      "size_bytes": 832,
+      "ground_truth_classification": "MALICIOUS",
+      "threat_category": "url_threat",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Multi-URL email carrying private RFC 1918 IP URL, URL shortener and open redirect parameters.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-23",
+      "filename": "attachments/d_double_extension.eml",
+      "sha256": "cf97e9b1bff276970d9a6f6e5af26632f7dddb868ae10fe0f696848e1ee60d6b",
+      "size_bytes": 603,
+      "ground_truth_classification": "MALICIOUS",
+      "threat_category": "malware_delivery",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Inbound screensaver binary disguised as PDF invoice via double extension (.pdf.scr).",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-24",
+      "filename": "attachments/d_traversal_filename.eml",
+      "sha256": "612d349b959101a31681a782a6c2a570fba111ef4c23fcce7dbac21bc3b1c2e3",
+      "size_bytes": 570,
+      "ground_truth_classification": "MALICIOUS",
+      "threat_category": "exploit_traversal",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Directory traversal attempt (../../../../hosts) in attachment filename to overwrite local files.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    },
+    {
+      "id": "RW-25",
+      "filename": "multipart/20_misleading_mime_metadata.eml",
+      "sha256": "3e1b8da3dcfc8b9553c26ac1157b6f7b098528146b2b57a1da0d4cd41c642158",
+      "size_bytes": 351,
+      "ground_truth_classification": "MALICIOUS",
+      "threat_category": "phishing_evasion",
+      "evaluation_applicability": "EVALUATED",
+      "rationale": "Evasive phishing portal disguising rich HTML login page inside text/plain MIME part.",
+      "provenance": "Git commit dab34b8 (Day 1 real-world scenario corpus)"
+    }
+  ]
+}

@@ -374,6 +374,10 @@ class BaseDNSResolver(ABC):
         resp = await self.resolve(ip_address, DNSQueryType.PTR)
         return resp.ptr_values()
 
+    async def close(self) -> None:
+        """Close or release any resolver resources."""
+        pass
+
 
 class AsyncDNSResolver(BaseDNSResolver):
     """Production asynchronous DNS resolver wrapping dnspython with bounded concurrency and timeouts."""
@@ -689,6 +693,42 @@ class AsyncDNSResolver(BaseDNSResolver):
                 resp.raise_for_status()
             return resp
 
+    async def close(self) -> None:
+        """Cleans up DNS cache and releases resources."""
+        if hasattr(self, "cache") and self.cache:
+            self.cache.clear()
+
+
+class OfflineBlockDNSResolver(BaseDNSResolver):
+    """Hermetic DNS resolver that guarantees zero outbound network calls in offline evaluation mode."""
+
+    def __init__(self, config: Optional[AuthProtocolsConfig] = None):
+        super().__init__()
+        self.config = config or AuthProtocolsConfig(offline_mode=True)
+        self.attempted_queries: List[Tuple[str, Any]] = []
+
+    async def resolve(
+        self,
+        domain: str,
+        query_type: Union[DNSQueryType, str],
+        raise_on_error: bool = False,
+    ) -> DNSResponse:
+        qtype = DNSQueryType(query_type.upper()) if isinstance(query_type, str) else query_type
+        self.attempted_queries.append((domain, qtype))
+        resp = DNSResponse(
+            domain=domain,
+            query_type=qtype,
+            status=DNSResponseStatus.ERROR,
+            error_type=DNSErrorType.RESOLVER_ERROR,
+            error_message="DNS resolution disabled in offline evaluation mode; outbound network access blocked.",
+        )
+        if raise_on_error:
+            resp.raise_for_status()
+        return resp
+
+    async def close(self) -> None:
+        pass
+
 
 class MockDNSResolver(BaseDNSResolver):
     """Deterministic in-memory DNS resolver for hermetic offline testing."""
@@ -889,6 +929,10 @@ class MockDNSResolver(BaseDNSResolver):
         self.recorded_queries.clear()
         self.cache.clear()
         self.reset_telemetry()
+
+    async def close(self) -> None:
+        """Cleans up mock DNS cache and state."""
+        self.clear()
 
     async def resolve(
         self,

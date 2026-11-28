@@ -1,0 +1,29 @@
+[
+  {
+    "id": "URL-SAMP-01",
+    "url": "http://paypal-verification-account-sec.com/login.php",
+    "label": "phishing",
+    "source": "DS-URL-04",
+    "provenance_nature": "SYNTHETIC_FIXTURE_MOCK",
+    "is_synthetic_fixture": true,
+    "transformation_notes": "Manually constructed synthetic URL mock simulating brand impersonation in subdomain/domain."
+  },
+  {
+    "id": "URL-SAMP-02",
+    "url": "http://192.168.1.100/download/invoice_scan.exe",
+    "label": "malware",
+    "source": "DS-URL-06",
+    "provenance_nature": "SYNTHETIC_FIXTURE_MOCK",
+    "is_synthetic_fixture": true,
+    "transformation_notes": "Manually constructed synthetic URL mock simulating IP-hosted executable download."
+  },
+  {
+    "id": "URL-SAMP-03",
+    "url": "https://www.google.com/search?q=cybersecurity",
+    "label": "benign",
+    "source": "DS-URL-07",
+    "provenance_nature": "TRANSFORMED_DERIVATIVE",
+    "is_synthetic_fixture": true,
+    "transformation_notes": "Transformed derivative record: extracted apex domain 'google.com' from Tranco Top 1M rank #1 and synthesized full query path 'search?q=cybersecurity' as benign control."
+  }
+]

@@ -97,3 +97,28 @@ tmp/
 temp/
 *.tmp
 scratch/
+
+# Raw external dataset archives (never commit raw external email/binary files to git)
+*.mbox
+*.eml
+*.tar.gz
+*.tgz
+*.bz2
+*.zip
+backend/data/raw/downloads/
+backend/data/raw/phishing_email/nazario/
+backend/data/raw/spam_email/spamassassin/
+backend/data/raw/sender_spoofing/epvme/
+backend/data/raw/**/*.mbox
+backend/data/raw/**/*.eml
+backend/data/raw/**/*.tar.gz
+backend/data/raw/**/*.tgz
+backend/data/raw/**/*.bz2
+backend/data/raw/**/*.zip
+
+# Processed external dataset records (never commit parsed message records to git)
+*.jsonl
+backend/data/processed/
+backend/data/processed/**
+
+

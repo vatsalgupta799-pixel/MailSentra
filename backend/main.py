@@ -113,10 +113,33 @@ async def lifespan(app: FastAPI):
             else:
                 logger.info("Production environment: Default administrator seeding disabled. Use CLI utility to provision accounts.")
 
+    # Initialize and verify Authentication Protocols subsystem (Step 3.7.4)
+    try:
+        from app.services.scan_service import scan_service
+        if hasattr(scan_service, "auth_analyzer") and scan_service.auth_analyzer:
+            logger.info(
+                f"Authentication Protocols subsystem ready (local_authserv_id={settings.LOCAL_AUTHSERV_ID or '<unconfigured>'}, "
+                f"dmarc_enforcement={settings.DMARC_POLICY_ENFORCEMENT_ENABLED})"
+            )
+    except Exception as e_init:
+        logger.warning(f"Authentication Protocols subsystem startup verification warning: {e_init}")
+
     yield
 
     logger.info("Shutting down MailSentra engine...")
-    await async_engine.dispose()
+    # Clean up Authentication Protocols Subsystem resources (Step 3.7.4)
+    try:
+        from app.services.scan_service import scan_service
+        if hasattr(scan_service, "shutdown"):
+            logger.info("Shutting down ScanService and AuthProtocolsAnalyzer resources...")
+            await scan_service.shutdown()
+        elif hasattr(scan_service, "auth_analyzer") and scan_service.auth_analyzer:
+            logger.info("Shutting down AuthProtocolsAnalyzer directly...")
+            await scan_service.auth_analyzer.shutdown()
+    except Exception as e_shut:
+        logger.error(f"Error during authentication subsystem shutdown: {e_shut}", exc_info=True)
+    finally:
+        await async_engine.dispose()
 
 
 is_dev_env = settings.ENVIRONMENT.lower().strip() == "development"

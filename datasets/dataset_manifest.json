@@ -1,0 +1,278 @@
+{
+  "manifest_version": "1.0.0",
+  "project": "MailSentra",
+  "generated_at": "2026-11-27T11:00:00Z",
+  "portfolio_count": 15,
+  "datasets": [
+    {
+      "id": "DS-01",
+      "name": "ISCX-URL-2016",
+      "provider": "University of New Brunswick (Canadian Institute for Cybersecurity)",
+      "source_url": "https://www.unb.ca/cic/datasets/url-2016.html",
+      "access_status": "OPEN",
+      "license": "Academic / Research Use Only",
+      "version": "2016.1",
+      "format": "CSV/ARFF",
+      "total_records": 152864,
+      "label_distribution": {
+        "benign": 35378,
+        "spam": 12000,
+        "phishing": 9965,
+        "malware": 11566,
+        "defacement": 96457
+      },
+      "source_overlap": "None",
+      "integration_status": "ASSESSED",
+      "intended_use": "Multi-class historical classification baseline"
+    },
+    {
+      "id": "DS-02",
+      "name": "PhiUSIIL Phishing URL Dataset (UCI)",
+      "provider": "UCI Machine Learning Repository / University of Leon",
+      "source_url": "https://archive.ics.uci.edu/dataset/967/phiusil+phishing+url+dataset",
+      "access_status": "OPEN",
+      "license": "CC BY 4.0",
+      "version": "1.0",
+      "format": "CSV",
+      "total_records": 235795,
+      "label_distribution": {
+        "benign": 134850,
+        "phishing": 100945
+      },
+      "source_overlap": "Identical underlying data to DS-03 (Mendeley v2)",
+      "integration_status": "VALIDATED",
+      "intended_use": "Structural URL lexical analysis & false-positive baseline"
+    },
+    {
+      "id": "DS-03",
+      "name": "PhiUSIIL Phishing URL Dataset (Mendeley v2)",
+      "provider": "Mendeley Data (Prasad & Chandra)",
+      "source_url": "https://data.mendeley.com/datasets/shwpxscxy2/2",
+      "access_status": "OPEN",
+      "license": "CC BY 4.0",
+      "version": "2.0",
+      "format": "CSV",
+      "total_records": 235795,
+      "label_distribution": {
+        "benign": 134850,
+        "phishing": 100945
+      },
+      "source_overlap": "Identical underlying data to DS-02 (UCI)",
+      "integration_status": "VALIDATED",
+      "intended_use": "Cross-source duplicate validation"
+    },
+    {
+      "id": "DS-04",
+      "name": "URL-Phish",
+      "provider": "Mendeley Data",
+      "source_url": "https://data.mendeley.com/datasets/65z9twcx3r/2",
+      "access_status": "OPEN",
+      "license": "CC BY 4.0",
+      "version": "2.0",
+      "format": "CSV",
+      "total_records": 100000,
+      "label_distribution": {
+        "benign": 50000,
+        "phishing": 50000
+      },
+      "source_overlap": "Subset drawn from historical PhishTank and Alexa Top 1M",
+      "integration_status": "ASSESSED",
+      "intended_use": "Lexical feature balance evaluation"
+    },
+    {
+      "id": "DS-05",
+      "name": "PhishStorm",
+      "provider": "Aalto University",
+      "source_url": "https://research.aalto.fi/en/datasets/phishstorm-phishing-legitimate-url-dataset",
+      "access_status": "RESTRICTED",
+      "license": "Unspecified / Research Only",
+      "version": "1.0",
+      "format": "CSV",
+      "total_records": 96018,
+      "label_distribution": {
+        "benign": 48009,
+        "phishing": 48009
+      },
+      "source_overlap": "Overlaps with historical Alexa and PhishTank 2014",
+      "integration_status": "BLOCKED",
+      "intended_use": "Academic lexical classification (blocked due to unspecified license)"
+    },
+    {
+      "id": "DS-06",
+      "name": "EBBU2017",
+      "provider": "GitHub (ebubekirbbr/pdd)",
+      "source_url": "https://github.com/ebubekirbbr/pdd/tree/master/input",
+      "access_status": "OPEN",
+      "license": "Public Domain",
+      "version": "2017.0",
+      "format": "CSV",
+      "total_records": 73575,
+      "label_distribution": {
+        "benign": 36400,
+        "phishing": 37175
+      },
+      "source_overlap": "Overlaps with PhishTank 2017",
+      "integration_status": "ASSESSED",
+      "intended_use": "Historical temporal drift testing"
+    },
+    {
+      "id": "DS-07",
+      "name": "PWD2021",
+      "provider": "Mendeley Data",
+      "source_url": "https://data.mendeley.com/datasets/n96ncsr5g4/1",
+      "access_status": "OPEN",
+      "license": "CC BY 4.0",
+      "version": "1.0",
+      "format": "CSV",
+      "total_records": 58645,
+      "label_distribution": {
+        "benign": 27998,
+        "phishing": 30647
+      },
+      "source_overlap": "OpenPhish and Alexa overlap",
+      "integration_status": "ASSESSED",
+      "intended_use": "Phishing pattern evaluation"
+    },
+    {
+      "id": "DS-08",
+      "name": "PILU-60K",
+      "provider": "University of Leon (GVIS Group)",
+      "source_url": "https://gvis.unileon.es/datasets-pilu-60K/",
+      "access_status": "OPEN",
+      "license": "Research Use Only",
+      "version": "1.0",
+      "format": "CSV",
+      "total_records": 60000,
+      "label_distribution": {
+        "benign": 30000,
+        "phishing": 30000
+      },
+      "source_overlap": "None documented",
+      "integration_status": "ASSESSED",
+      "intended_use": "Login-page structural URL evaluation"
+    },
+    {
+      "id": "DS-09",
+      "name": "Malicious URLs Dataset",
+      "provider": "Kaggle (sid321axn)",
+      "source_url": "https://www.kaggle.com/datasets/sid321axn/malicious-urls-dataset",
+      "access_status": "REGISTRATION_REQUIRED",
+      "license": "Open Data Commons Open Database License (ODbL)",
+      "version": "1.0",
+      "format": "CSV",
+      "total_records": 651191,
+      "label_distribution": {
+        "benign": 428103,
+        "defacement": 96457,
+        "phishing": 94111,
+        "malware": 32520
+      },
+      "source_overlap": "Substantial overlap with ISCX-URL-2016",
+      "integration_status": "ASSESSED",
+      "intended_use": "Multi-class malicious detection"
+    },
+    {
+      "id": "DS-10",
+      "name": "PhreshPhish",
+      "provider": "Hugging Face (phreshphish community)",
+      "source_url": "https://huggingface.co/datasets/phreshphish/phreshphish",
+      "access_status": "OPEN",
+      "license": "Apache 2.0",
+      "version": "1.0",
+      "format": "JSON/Parquet",
+      "total_records": 25000,
+      "label_distribution": {
+        "benign": 12500,
+        "phishing": 12500
+      },
+      "source_overlap": "None documented",
+      "integration_status": "ASSESSED",
+      "intended_use": "Modern phishing URL validation"
+    },
+    {
+      "id": "DS-11",
+      "name": "PhishTank",
+      "provider": "Cisco Talos / PhishTank",
+      "source_url": "https://phishtank.org/developer_info.php",
+      "access_status": "API_KEY_REQUIRED",
+      "license": "Attribution / Non-Commercial",
+      "version": "Live 2026",
+      "format": "JSON/CSV",
+      "total_records": 45000,
+      "label_distribution": {
+        "phishing": 45000
+      },
+      "source_overlap": "Primary feed provider cited by DS-04, DS-05, DS-06",
+      "integration_status": "USED_IN_TESTS",
+      "intended_use": "Ground-truth verified phishing test fixtures"
+    },
+    {
+      "id": "DS-12",
+      "name": "OpenPhish",
+      "provider": "OpenPhish Global Threat Intelligence",
+      "source_url": "https://openphish.com/phishing_feeds.html",
+      "access_status": "OPEN",
+      "license": "OpenPhish Terms of Use (Non-Commercial Community)",
+      "version": "Live 2026",
+      "format": "TXT",
+      "total_records": 1800,
+      "label_distribution": {
+        "phishing": 1800
+      },
+      "source_overlap": "Feed provider cited by DS-07",
+      "integration_status": "ASSESSED",
+      "intended_use": "Temporal validation of zero-day phishing"
+    },
+    {
+      "id": "DS-13",
+      "name": "URLhaus",
+      "provider": "abuse.ch (Bern University of Applied Sciences)",
+      "source_url": "https://urlhaus.abuse.ch/api/",
+      "access_status": "OPEN",
+      "license": "CC0 1.0 Universal (Public Domain Dedication)",
+      "version": "Live 2026",
+      "format": "JSON/CSV",
+      "total_records": 1500000,
+      "label_distribution": {
+        "malware_distribution": 1500000
+      },
+      "source_overlap": "Primary global malware distribution repository",
+      "integration_status": "USED_IN_TESTS",
+      "intended_use": "Malware-distribution URL & payload extension test fixtures"
+    },
+    {
+      "id": "DS-14",
+      "name": "Tranco",
+      "provider": "Tranco Research Team (Pochat, van Goethem, Tajalizadeh, Liefooghe, Joosen)",
+      "source_url": "https://tranco-list.eu/",
+      "access_status": "OPEN",
+      "license": "MIT License",
+      "version": "2026.11",
+      "format": "CSV",
+      "total_records": 1000000,
+      "label_distribution": {
+        "benign_top_domains": 1000000
+      },
+      "source_overlap": "Academic consensus list aggregating Alexa, Cisco Umbrella, Majestic, Farsight",
+      "integration_status": "USED_IN_TESTS",
+      "intended_use": "False-positive benign baseline calibration"
+    },
+    {
+      "id": "DS-15",
+      "name": "Common Crawl",
+      "provider": "Common Crawl Foundation",
+      "source_url": "https://commoncrawl.org/",
+      "access_status": "OPEN",
+      "license": "Common Crawl Terms of Use",
+      "version": "2026-10",
+      "format": "WARC/Index API",
+      "total_records": 3000000000,
+      "label_distribution": {
+        "web_corpus": 3000000000
+      },
+      "source_overlap": "None",
+      "integration_status": "ASSESSED",
+      "intended_use": "Web structure and lexical distribution diversity"
+    }
+  ]
+}

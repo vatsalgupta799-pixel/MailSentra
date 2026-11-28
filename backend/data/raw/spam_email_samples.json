@@ -1,0 +1,22 @@
+[
+  {
+    "id": "SP-SAMP-01",
+    "subject": "Lowest Mortgage Rates Guaranteed - Act Today!",
+    "body": "Refinance your home now with zero down payment! Exclusive pre-approved rates for homeowners. Click to claim your free quote.",
+    "label": "spam",
+    "source": "DS-SP-01",
+    "provenance_nature": "SYNTHETIC_FIXTURE_MOCK",
+    "is_synthetic_fixture": true,
+    "transformation_notes": "Manually constructed test mock representing financial loan spam."
+  },
+  {
+    "id": "SP-SAMP-02",
+    "subject": "Special Offer: Rolex Replicas & Luxury Watches 90% Off",
+    "body": "Top quality Swiss timepieces at unbelievable clearance prices. Order now for free worldwide delivery.",
+    "label": "spam",
+    "source": "DS-SP-02",
+    "provenance_nature": "SYNTHETIC_FIXTURE_MOCK",
+    "is_synthetic_fixture": true,
+    "transformation_notes": "Manually constructed test mock representing luxury counterfeit goods commercial spam."
+  }
+]

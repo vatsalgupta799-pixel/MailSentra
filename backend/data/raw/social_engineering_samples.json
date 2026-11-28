@@ -1,0 +1,22 @@
+[
+  {
+    "id": "SE-SAMP-01",
+    "subject": "CRITICAL: Immediate Account Deactivation in 24 Hours",
+    "body": "Failure to verify your identity within 24 hours will result in permanent deletion of all academic records and mailbox access.",
+    "label": "social_engineering",
+    "source": "DS-SE-01",
+    "provenance_nature": "SYNTHETIC_FIXTURE_MOCK",
+    "is_synthetic_fixture": true,
+    "transformation_notes": "Manually constructed test mock representing urgent psychological intimidation and coercive authority."
+  },
+  {
+    "id": "SE-SAMP-02",
+    "subject": "Offer: UNICEF Student Remote Research Assistant ($450/week)",
+    "body": "We are seeking a diligent student for remote research. We will mail an upfront cheque of $2,500 to purchase study materials. Deposit it and wire the balance.",
+    "label": "social_engineering",
+    "source": "DS-SE-05",
+    "provenance_nature": "SYNTHETIC_FIXTURE_MOCK",
+    "is_synthetic_fixture": true,
+    "transformation_notes": "Manually constructed test mock representing employment/cheque overpayment scam."
+  }
+]

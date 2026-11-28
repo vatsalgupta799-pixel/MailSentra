@@ -1,0 +1,24 @@
+[
+  {
+    "id": "SS-SAMP-01",
+    "sender": "Dean of Science <attacker@external-free-host.org>",
+    "subject": "Confidential Research Request",
+    "body": "Are you on campus right now? I need you to execute a confidential assignment for the department. Reply via this email.",
+    "label": "spoofed",
+    "source": "DS-SS-06",
+    "provenance_nature": "SYNTHETIC_FIXTURE_MOCK",
+    "is_synthetic_fixture": true,
+    "transformation_notes": "Manually constructed test mock representing display-name impersonation."
+  },
+  {
+    "id": "SS-SAMP-02",
+    "sender": "PayPal Support <service@security-alert-center.net>",
+    "subject": "Unusual Sign-in Attempt Detected",
+    "body": "We detected an unauthorized login to your PayPal wallet. Confirm your identity now.",
+    "label": "spoofed",
+    "source": "DS-SS-03",
+    "provenance_nature": "SYNTHETIC_FIXTURE_MOCK",
+    "is_synthetic_fixture": true,
+    "transformation_notes": "Manually constructed test mock representing brand display-name spoofing with domain mismatch."
+  }
+]

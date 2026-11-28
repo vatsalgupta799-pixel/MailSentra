@@ -1,0 +1,1488 @@
+{
+  "manifest_schema_version": "1.0.0",
+  "manifest_name": "MailSentra Synthetic 75 Threat Validation Ground-Truth Manifest",
+  "corpus_id": "SYNTHETIC_75",
+  "created_at": "2026-11-27T16:50:00+05:30",
+  "provenance_declaration": "Authored and validated during Milestone 4.3 (Synthetic Threat Validation Corpus).",
+  "corpus_relative_path": "../email_corpus",
+  "total_fixtures": 75,
+  "category_counts": {
+    "phishing": 20,
+    "malware_delivery": 15,
+    "spoofing_authentication": 10,
+    "business_email_compromise": 10,
+    "advanced_adversarial": 10,
+    "legitimate": 10
+  },
+  "fixtures": [
+    {
+      "test_id": "CORPUS-PHISH-01",
+      "filename": "phishing/phish_01.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD",
+        "ORGANIZATIONAL_ROLE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "ROLE_SPOOFING"
+      ],
+      "expected_url_findings": [
+        "http://university-verify.xyz/login.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Impersonates university IT desk using high-risk .xyz domain to harvest academic SSO credentials.",
+      "sha256": "2bf899cef22bc017184d648d361d930b11e19f707c92ded5e693213929e327ab",
+      "size_bytes": 927,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-02",
+      "filename": "phishing/phish_02.eml",
+      "category": "phishing",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "TYPOSQUATTING_HOSTNAME",
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://m365-security-portal.top/auth.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Typosquatted sender domain (micros0ft) combined with high-risk .top TLD phishing destination.",
+      "sha256": "fb1c3d697ce55fdf1b2f7e8e80db4d62b1d88788301829b8385688b92cf155e6",
+      "size_bytes": 931,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-03",
+      "filename": "phishing/phish_03.eml",
+      "category": "phishing",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "TYPOSQUATTING_HOSTNAME",
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://accounts-google.review/checkpoint.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Google brand typosquatting (g00gle) paired with high-risk .review TLD credential harvester.",
+      "sha256": "f311a95a7087d93068b7f38aacaef1ac21e9746c0e0d70684864cfd36f7ca6a3",
+      "size_bytes": 932,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-04",
+      "filename": "phishing/phish_04.eml",
+      "category": "phishing",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "IP_HOST_PRIVATE",
+        "SUSPICIOUS"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "http://192.168.1.50/chase-online.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "RFC 1918 private IP URL used directly as host in bank suspension lure.",
+      "sha256": "15a45a62e8773a53a927e71aba484c0d7720c8d37c11d6604792044c11fca35e",
+      "size_bytes": 935,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-05",
+      "filename": "phishing/phish_05.eml",
+      "category": "phishing",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD",
+        "OPEN_REDIRECT_PARAM"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://pay-portal.xyz/billing/retry.invalid?url=http://attacker.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Payment failure notification using .xyz TLD with embedded open redirect parameter.",
+      "sha256": "4c37eca2cfcc2a55bb42cbb7ba92500e23d38ce31295511a2d0d2cf4e7236a05",
+      "size_bytes": 964,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-06",
+      "filename": "phishing/phish_06.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://parcel-tracking.download/dhl.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Courier delivery lure using high-risk .download top-level domain.",
+      "sha256": "21157a703c23c355949317073b94921b6aa4a3f594f2c02b42669ad072f159c6",
+      "size_bytes": 935,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-07",
+      "filename": "phishing/phish_07.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://irs-direct-refund.loan/claim.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Government agency impersonation using high-risk .loan top-level domain.",
+      "sha256": "951ac60e99e75ff4f0d776032fbbd828d3ec33f752f994e0e997abdd68496914",
+      "size_bytes": 946,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-08",
+      "filename": "phishing/phish_08.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://streaming-billing.stream/invoice.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Subscription service renewal lure hosted on high-risk .stream TLD.",
+      "sha256": "fc20ef4a9dfe12a696f074ca6de7b459a4d05e93e09cb396f5bff2555f267ff6",
+      "size_bytes": 935,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-09",
+      "filename": "phishing/phish_09.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://auth0-reset.trade/password.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Enterprise SSO password reset prompt hosted on suspicious .trade TLD.",
+      "sha256": "4f3bee42d5a590590df4c3260a77309d5dbec8beaf25c1cd5b81bb1cef0932ac",
+      "size_bytes": 918,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-10",
+      "filename": "phishing/phish_10.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://mfa-checkpoint.date/verify.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "MFA token enrollment lure on high-risk .date TLD to hijack 2FA sessions.",
+      "sha256": "95e7661fc89f4ce17b325f70acd4922519c4fe341721fc15bbef8de454cdbac0",
+      "size_bytes": 920,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-11",
+      "filename": "phishing/phish_11.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://cloud-share.party/view.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Document sharing impersonation using high-risk .party TLD.",
+      "sha256": "418044ad5db9fd8b929cb6c1ced7a71b81cb43f138b21c32f6c381450b1f4606",
+      "size_bytes": 916,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-12",
+      "filename": "phishing/phish_12.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD",
+        "ORGANIZATIONAL_ROLE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "ROLE_SPOOFING"
+      ],
+      "expected_url_findings": [
+        "https://hr-portal.faith/benefits.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Internal HR benefit enrollment spoofing on high-risk .faith TLD.",
+      "sha256": "54c2d67ac0c993865fe553161b4dab1f06f587a217d34bb873d53beb67a6fc30",
+      "size_bytes": 925,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-13",
+      "filename": "phishing/phish_13.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD",
+        "ORGANIZATIONAL_ROLE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "ROLE_SPOOFING"
+      ],
+      "expected_url_findings": [
+        "https://scholarship-awards.win/accept.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Academic scholarship award lure targeting students on high-risk .win TLD.",
+      "sha256": "ff988232664a47fa8d23984ca9a680f09dc1b2aea178f70ad55eacfa9c0bfbe6",
+      "size_bytes": 958,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-14",
+      "filename": "phishing/phish_14.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://internships-apply.racing/offer.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Student career internship lure hosted on high-risk .racing TLD.",
+      "sha256": "c8dda6dda9908ff9aefea90beedcc27fc612d121eb46077b569d6fb1a23abec0",
+      "size_bytes": 946,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-15",
+      "filename": "phishing/phish_15.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD",
+        "ORGANIZATIONAL_ROLE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "ROLE_SPOOFING"
+      ],
+      "expected_url_findings": [
+        "https://portal-exams.accountant/grades.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Grade release notification phishing on high-risk .accountant TLD.",
+      "sha256": "78757810a5622f993030e3a2e8caceb8ae36e6a1d6ebb27f146caf70929adcdc",
+      "size_bytes": 943,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-16",
+      "filename": "phishing/phish_16.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://bursar-tuition.bid/pay.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Tuition fee collection lure on high-risk .bid TLD.",
+      "sha256": "eb30031b7ebb1dbba38775a929b735febe0f738b6d987f30ad6b57bba83bf854",
+      "size_bytes": 922,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-17",
+      "filename": "phishing/phish_17.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://docusign-envelope.work/sign.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "DocuSign brand impersonation requesting electronic signature on .work TLD.",
+      "sha256": "bec05a81f3dc7053af8ddff3155bfd66a95eeb30f89a094f28769291572b6fd0",
+      "size_bytes": 947,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-18",
+      "filename": "phishing/phish_18.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD",
+        "ORGANIZATIONAL_ROLE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "ROLE_SPOOFING"
+      ],
+      "expected_url_findings": [
+        "https://payroll-services.club/login.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Payroll portal credential phishing targeting W-2 forms on .club TLD.",
+      "sha256": "33937af8c7fcd862a114a0fb32adf29a1d92d4b0b21f1a99933daa9d04395af2",
+      "size_bytes": 937,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-19",
+      "filename": "phishing/phish_19.eml",
+      "category": "phishing",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://recovery-center.pw/restore.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Account recovery security alert hosted on high-risk .pw TLD.",
+      "sha256": "95e69fbfa492e4e4f75591d2c24413ba62f7d2eb8ff809c50ea54444ab335872",
+      "size_bytes": 928,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-PHISH-20",
+      "filename": "phishing/phish_20.eml",
+      "category": "phishing",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD",
+        "OPEN_REDIRECT_PARAM"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://corporate-survey.club/step1.invalid?redirect=https://evil.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Internal compliance survey lure leading through an open redirect chain.",
+      "sha256": "b4ec094472e7d5a2c5caac9dd3307c2a11d6c7b756fc39e637afbe148c109901",
+      "size_bytes": 1000,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-MALWARE-01",
+      "filename": "malware_delivery/malware_01.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_EXTENSION",
+        "EXECUTABLE_ATTACHMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Invoice_Nov2026.exe",
+          "content_type": "application/x-msdownload"
+        }
+      ],
+      "rationale": "Direct executable attachment disguised as billing invoice.",
+      "sha256": "f36c6cafd3e8ad403fa80f3dd8a1005bdf0368fca134fa737f544c74229e5ba9",
+      "size_bytes": 851,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-MALWARE-02",
+      "filename": "malware_delivery/malware_02.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "ARCHIVE_CONTAINER"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Remittance_Proof.zip",
+          "content_type": "application/zip"
+        }
+      ],
+      "rationale": "Compressed archive delivery intended to evade perimeter attachment inspection.",
+      "sha256": "6c25484c210c20b94607cdb6f1982642dc5d406d0fc8462fac8d4ce46a806074",
+      "size_bytes": 824,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-MALWARE-03",
+      "filename": "malware_delivery/malware_03.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "DOUBLE_EXTENSION",
+        "SUSPICIOUS_EXTENSION"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Invoice_URGENT_OVERDUE_PAYMENT_NOW.pdf.exe",
+          "content_type": "application/x-msdownload"
+        }
+      ],
+      "rationale": "Double extension masking Windows executable with deceptive uppercase PDF prefix.",
+      "sha256": "3014ab7bb4ccbd1044df8ddfcb91710289f498fdb3bec7f37dec028a22c1133b",
+      "size_bytes": 824,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-MALWARE-04",
+      "filename": "malware_delivery/malware_04.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "DOUBLE_EXTENSION",
+        "SUSPICIOUS_EXTENSION"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Employee_Benefits_2026.xlsx.exe",
+          "content_type": "application/x-msdownload"
+        }
+      ],
+      "rationale": "Malicious double extension masquerading as Excel spreadsheet.",
+      "sha256": "c65e195b20e007030789fd6653648c474d429a7cc1409eff9a8c16b8dce481ee",
+      "size_bytes": 831,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-MALWARE-05",
+      "filename": "malware_delivery/malware_05.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "MACRO_CAPABLE_DOCUMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Purchase_Order_PO991.docm",
+          "content_type": "application/vnd.ms-word.document.macroEnabled.12"
+        }
+      ],
+      "rationale": "Macro-enabled Word document capable of hosting malicious VBA payload.",
+      "sha256": "4fcccab76c78f5efcfadace8041b235d9d28b2c21ad84304c39bd59176ae8738",
+      "size_bytes": 908,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-MALWARE-06",
+      "filename": "malware_delivery/malware_06.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SCRIPT_ATTACHMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Statement_Browser.js",
+          "content_type": "application/javascript"
+        }
+      ],
+      "rationale": "Standalone client-side JavaScript file delivered as email attachment.",
+      "sha256": "1362ec71fffaf4baf093abf79f3bf2c6468d071951f17bc82483a6b082b7114f",
+      "size_bytes": 888,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-MALWARE-07",
+      "filename": "malware_delivery/malware_07.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SCRIPT_ATTACHMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Install_System_Update.ps1",
+          "content_type": "text/plain"
+        }
+      ],
+      "rationale": "PowerShell execution script attachment targeting enterprise workstations.",
+      "sha256": "0c10de8251c07cab14b19aa85f8850676a1d5d6f3e755a76e114be018b679646",
+      "size_bytes": 886,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-MALWARE-08",
+      "filename": "malware_delivery/malware_08.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "HTML_ATTACHMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Payment_Voucher.html",
+          "content_type": "text/html"
+        }
+      ],
+      "rationale": "HTML attachment containing local credential-harvesting form.",
+      "sha256": "febaa390ebcbff1446d6d6350a191b7e5bd8e3018caabe97de2ff816b6dccd72",
+      "size_bytes": 908,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-MALWARE-09",
+      "filename": "malware_delivery/malware_09.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "DISK_IMAGE_ATTACHMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Software_Bundle.iso",
+          "content_type": "application/x-iso9660-image"
+        }
+      ],
+      "rationale": "ISO optical disk image used to bypass Mark-of-the-Web security controls.",
+      "sha256": "4c6ae1617ab9c7ffc17bab4a68783520f55d227e18e0c63b2f622db1cc19b677",
+      "size_bytes": 871,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-MALWARE-10",
+      "filename": "malware_delivery/malware_10.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "DISK_IMAGE_ATTACHMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Receipt_Archive.img",
+          "content_type": "application/octet-stream"
+        }
+      ],
+      "rationale": "Raw disk image container intended to mount virtual filesystems upon user click.",
+      "sha256": "6760eb12fec8712dfe5e14af7aa8d90c9e6bfceb1daecf1ae7eafbd906649804",
+      "size_bytes": 840,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-MALWARE-11",
+      "filename": "malware_delivery/malware_11.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "ENCRYPTED_ARCHIVE"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Confidential_Docs_pass123.zip",
+          "content_type": "application/zip"
+        }
+      ],
+      "rationale": "Password-protected ZIP container designed to prevent gateway AV extraction.",
+      "sha256": "9282b40713b116e40011ee9d8eb4c02105e48cd33a138fdeccc523bcaf02a274",
+      "size_bytes": 884,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-MALWARE-12",
+      "filename": "malware_delivery/malware_12.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "BINARY_LIBRARY_ATTACHMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "SecurEngine.dll",
+          "content_type": "application/x-msdownload"
+        }
+      ],
+      "rationale": "Direct Dynamic Link Library attachment capable of side-loading attacks.",
+      "sha256": "bb49dedfb36efb35cbf70f3cea8c734064b4e35ab2ccd59eab603587773e2e87",
+      "size_bytes": 844,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-MALWARE-13",
+      "filename": "malware_delivery/malware_13.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SHORTCUT_ATTACHMENT"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Open_Invoice.lnk",
+          "content_type": "application/x-ms-shortcut"
+        }
+      ],
+      "rationale": "Windows Shell Link LNK shortcut designed to execute remote command lines.",
+      "sha256": "3517793756ce308c5526ddd9196ff5d69dd1254cc7c27be815d98f98174174d0",
+      "size_bytes": 854,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-MALWARE-14",
+      "filename": "malware_delivery/malware_14.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "COMPRESSED_ARCHIVE"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "Contract_Draft.tar.gz",
+          "content_type": "application/gzip"
+        }
+      ],
+      "rationale": "Tarball archive delivery concealing internal document payloads.",
+      "sha256": "f62c451c0d692e49104d66dd31c6ecc8c750fe8291aa5a2e2d8ba3e4b32d1ea4",
+      "size_bytes": 846,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-MALWARE-15",
+      "filename": "malware_delivery/malware_15.eml",
+      "category": "malware_delivery",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_EXTENSION_IN_URL",
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://cdn-download.xyz/updater.exe.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Drive-by executable download lure linking directly to .exe on high-risk .xyz TLD.",
+      "sha256": "d2f2adc66e80a2a1833a3fd41803ca76409f34f2266b9aa0145168c53f1b6aa2",
+      "size_bytes": 430,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-SPOOF-01",
+      "filename": "spoofing_authentication/spoof_01.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "VIP_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "VIP_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "President name in display header sent from external unauthorized webmail provider.",
+      "sha256": "5644c3df5c1014aa4f2bf98a2b01dcd3bd1da706e73618fb301e9f085dee4a07",
+      "size_bytes": 468,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-SPOOF-02",
+      "filename": "spoofing_authentication/spoof_02.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "FROM_REPLYTO_MISMATCH"
+      ],
+      "expected_sender_anomalies": [
+        "FROM_REPLYTO_MISMATCH"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Legitimate From header address coupled with deceptive external Reply-To domain.",
+      "sha256": "689166523e4b14822071e2c9daf4a5469bb91f5a5525474f3a7bac9b09df10f9",
+      "size_bytes": 552,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-SPOOF-03",
+      "filename": "spoofing_authentication/spoof_03.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "TYPOSQUATTING_HOSTNAME"
+      ],
+      "expected_sender_anomalies": [
+        "TYPOSQUATTING_HOSTNAME"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Typosquatted domain substituting numeral 0 for letter o (stanf0rd.edu).",
+      "sha256": "6afb6f3c896ece974e9d9eff099073b2a9aac29872a96fa3132e1327894241bb",
+      "size_bytes": 481,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-SPOOF-04",
+      "filename": "spoofing_authentication/spoof_04.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SPF_FAIL"
+      ],
+      "expected_sender_anomalies": [
+        "SPF_FAIL"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Envelope IP originates from rogue unauthorized relay failing SPF validation.",
+      "sha256": "1a536200f435a15dca7474b4ef45f9f3f3fcf80fbad3105550b7bcab34778b95",
+      "size_bytes": 604,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-SPOOF-05",
+      "filename": "spoofing_authentication/spoof_05.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "DKIM_FAIL"
+      ],
+      "expected_sender_anomalies": [
+        "DKIM_FAIL"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Cryptographic body hash signature fails DKIM verification due to tampering.",
+      "sha256": "2e4b97535110fc04f4b3a36738e34aa4c3a79846ec55874c00c72406fc2b2419",
+      "size_bytes": 616,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-SPOOF-06",
+      "filename": "spoofing_authentication/spoof_06.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "DMARC_FAIL"
+      ],
+      "expected_sender_anomalies": [
+        "DMARC_FAIL"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Header From asserts strict DMARC domain while SPF and DKIM completely unaligned.",
+      "sha256": "40460e4681beaca182b953859ac13ee71cdf7c037170415b9f0c84dd6651827a",
+      "size_bytes": 554,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-SPOOF-07",
+      "filename": "spoofing_authentication/spoof_07.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SPOOFED_AUTH_RESULTS"
+      ],
+      "expected_sender_anomalies": [
+        "SPOOFED_AUTH_RESULTS"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Inbound untrusted message injecting pre-forged Authentication-Results header.",
+      "sha256": "7b25feec2513edb4bc43d11a78644a7ca2832d6c185e9019db4b2555839b1730",
+      "size_bytes": 557,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-SPOOF-08",
+      "filename": "spoofing_authentication/spoof_08.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "FROM_RETURN_PATH_MISMATCH"
+      ],
+      "expected_sender_anomalies": [
+        "FROM_RETURN_PATH_MISMATCH"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Legitimate From header accompanied by suspicious bounce relay Return-Path.",
+      "sha256": "af45a19163dc1cc6f0bfb873db4d0c801ada618bc27080b7bcdaac68021f22ae",
+      "size_bytes": 549,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-SPOOF-09",
+      "filename": "spoofing_authentication/spoof_09.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "EMPLOYEE_IMPERSONATION",
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [
+        "EMPLOYEE_IMPERSONATION",
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Display name of internal engineer sent from external lookalike portal on .xyz.",
+      "sha256": "649751730a3f7db228fb46df644e07b02c36c7c700379a84d809222baa7f03d9",
+      "size_bytes": 492,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-SPOOF-10",
+      "filename": "spoofing_authentication/spoof_10.eml",
+      "category": "spoofing_authentication",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SENDER_HEADER_CONFLICT"
+      ],
+      "expected_sender_anomalies": [
+        "SENDER_HEADER_CONFLICT"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Conflicting From and Sender headers asserting disjoint identity boundaries.",
+      "sha256": "7b953b46655c28f71adfd9aa90373f5dcc177f3a5462776051c621416e2d23d7",
+      "size_bytes": 501,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-BEC-01",
+      "filename": "business_email_compromise/bec_01.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Fake CEO payment request.",
+      "sha256": "1d76acf56b8daa99730daad14d0fdfd65d2c5c0128853b09312266eac9cd0200",
+      "size_bytes": 553,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-BEC-02",
+      "filename": "business_email_compromise/bec_02.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Vendor bank-account change.",
+      "sha256": "4e0c55fd5db88decc062a8f35fe35bda6429c701e607ccc1a56f87b7b21e8d68",
+      "size_bytes": 574,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-BEC-03",
+      "filename": "business_email_compromise/bec_03.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Urgent wire transfer request.",
+      "sha256": "4b5728f5bc676d96065e1cac6722baf769efc898cd312643051aa138f4525172",
+      "size_bytes": 541,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-BEC-04",
+      "filename": "business_email_compromise/bec_04.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Fake invoice approval.",
+      "sha256": "e104c5f4145e5e3cad3a0bb9c3d09bbe5c7b793973ac79e199c8537b2cc88ad8",
+      "size_bytes": 563,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-BEC-05",
+      "filename": "business_email_compromise/bec_05.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Payroll diversion.",
+      "sha256": "533d81bef779b1df484ccef5989105898a858de2bdb24f56dde476f1d077da95",
+      "size_bytes": 560,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-BEC-06",
+      "filename": "business_email_compromise/bec_06.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Gift-card fraud.",
+      "sha256": "562a57dfb6d1f1607318c66dbeb34ce888b9031c5972441fdfe603936518192b",
+      "size_bytes": 567,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-BEC-07",
+      "filename": "business_email_compromise/bec_07.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Fake procurement request.",
+      "sha256": "0a7ab18d3760a1a6667b10b362ea8c5e22bd65cac3ca5f8f07e98a90dea94894",
+      "size_bytes": 547,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-BEC-08",
+      "filename": "business_email_compromise/bec_08.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Executive impersonation.",
+      "sha256": "ccc01a31e7cfbd90aedfcb875e595b18e536e2a134fca7d5856ae34a1ac556f6",
+      "size_bytes": 539,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-BEC-09",
+      "filename": "business_email_compromise/bec_09.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Confidential financial document request.",
+      "sha256": "39a847ac388d91654086dd6b266fdc06f257418a5606fffad97877b63ed27211",
+      "size_bytes": 547,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-BEC-10",
+      "filename": "business_email_compromise/bec_10.eml",
+      "category": "business_email_compromise",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "FINANCIAL_COERCION",
+        "EXECUTIVE_IMPERSONATION"
+      ],
+      "expected_sender_anomalies": [
+        "EXTERNAL_SENDER_IMPERSONATION"
+      ],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "BEC financial/wire manipulation lure: Supplier payment redirection.",
+      "sha256": "c861579407acdc4875c59dfd3192478542c2ccdd520c288afd360d2a54dd80b9",
+      "size_bytes": 570,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-ADV-01",
+      "filename": "advanced_adversarial/adv_01.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "HOMOGRAPH_HOSTNAME"
+      ],
+      "expected_sender_anomalies": [
+        "HOMOGRAPH_SENDER"
+      ],
+      "expected_url_findings": [
+        "http://\u0430pple.com/verify.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Cyrillic homoglyph character used in sending domain and URL hostname.",
+      "sha256": "342b6bec0948b5c7e2f0227ee774eb46834b0bbf3082264395786552f82f7aa9",
+      "size_bytes": 451,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-ADV-02",
+      "filename": "advanced_adversarial/adv_02.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "ZERO_WIDTH_UNICODE"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://pay\u200bpal.com/verify.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Zero-width space U+200B inserted into brand name to bypass string matching filters.",
+      "sha256": "6354873b145d8662f2b35280f1750972c9515bcae38141a5754fc7b03ac643b2",
+      "size_bytes": 434,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-ADV-03",
+      "filename": "advanced_adversarial/adv_03.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "KNOWN_SHORTENER"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://bit.ly/3xYObfuscatedShortener"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Known URL shortening service used to conceal true HTTP landing destination.",
+      "sha256": "30476bb8f0c2ac5392b753c63996053119a57905da601bf738dc506f5b03b938",
+      "size_bytes": 449,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-ADV-04",
+      "filename": "advanced_adversarial/adv_04.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "IP_HOST_PRIVATE",
+        "KNOWN_SHORTENER"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "http://10.0.0.1/admin-portal.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Combines private RFC 1918 management IP address with shortened redirection link.",
+      "sha256": "0b7db447434083b4d4f80ece480336ad291113e4b0838bfded78346c1d4fd373",
+      "size_bytes": 456,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-ADV-05",
+      "filename": "advanced_adversarial/adv_05.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "OPEN_REDIRECT_PARAM"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://login.example.com/oauth/auth?redirect_uri=https://evil.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Abuse of trusted identity provider using an unvalidated redirect_uri parameter.",
+      "sha256": "e8812b0cd2345d99b42053189269945517d024a600097042c4aa8bcfdd264e8a",
+      "size_bytes": 489,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-ADV-06",
+      "filename": "advanced_adversarial/adv_06.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "SUSPICIOUS_TLD",
+        "ANCHOR_TEXT_MISMATCH"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "http://actual-malicious-portal.xyz/login.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Visible anchor text displays trusted banking domain while href links to malicious .xyz portal.",
+      "sha256": "0bd2dc03943c9907c2c80fc45df9486b9953f084f123834f1131b9720bbcc76b",
+      "size_bytes": 694,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-ADV-07",
+      "filename": "advanced_adversarial/adv_07.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "EXCESSIVE_URGENCY",
+        "SUSPICIOUS_TLD"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "https://secure-restore.xyz/account.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Artificial temporal coercion combined with high-risk .xyz destination.",
+      "sha256": "8fdbfdc22a123f2d0f93db35e724486186737cf7680466ff0f974a1b95ab29e3",
+      "size_bytes": 474,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-ADV-08",
+      "filename": "advanced_adversarial/adv_08.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "QR_CODE_PHISHING_LURE"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [
+        {
+          "filename": "authenticator_qr.png"
+        }
+      ],
+      "rationale": "Quishing lure instructing recipient to scan an embedded QR graphic on mobile.",
+      "sha256": "16493cdc9b2df6afe618114347c5a0bb05864fca5f72eb9ea72d465fa7ea478a",
+      "size_bytes": 722,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-ADV-09",
+      "filename": "advanced_adversarial/adv_09.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "SUSPICIOUS",
+      "expected_severity": "SUSPICIOUS",
+      "expected_indicators": [
+        "MIME_STRUCTURE_ANOMALY"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Malformed nested MIME multipart boundary designed to trigger parser exceptions.",
+      "sha256": "6359b1b76dd78e83188ef2fe4ebdb539b0ea108dc848a75ae6bb563c3f189158",
+      "size_bytes": 439,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-ADV-10",
+      "filename": "advanced_adversarial/adv_10.eml",
+      "category": "advanced_adversarial",
+      "expected_verdict": "MALICIOUS",
+      "expected_severity": "MALICIOUS",
+      "expected_indicators": [
+        "IP_HOST_LOOPBACK",
+        "IP_HOST_ENCODED"
+      ],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [
+        "http://0x7f000001/admin.invalid"
+      ],
+      "attachment_metadata": [],
+      "rationale": "Legitimate newsletter text concealing an obfuscated hexadecimal loopback URL.",
+      "sha256": "5effcea77f04415bd47ab2f79fe98f505483e4c1fae936304d0f3ae5fa7aa84c",
+      "size_bytes": 455,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-LEGIT-01",
+      "filename": "legitimate/legit_01.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Standard academic registrar schedule announcement.",
+      "sha256": "19e447bcebac281874b2d8f1fcb848a284aa4077f0d0d4f3e0bab5fb6f448f60",
+      "size_bytes": 506,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-LEGIT-02",
+      "filename": "legitimate/legit_02.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Classroom location change notification from authenticated university departmental address.",
+      "sha256": "559df8c5bc7a559bf4c5c27fb85ef88f92cfe1751ed1c2ee736c0f44e7964cc8",
+      "size_bytes": 497,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-LEGIT-03",
+      "filename": "legitimate/legit_03.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Standard automated reminder from enterprise educational LMS platform.",
+      "sha256": "4a4b2dc1c83cb5573db8e021f791fc46b228b651ec36e8b1798fa438bd99f1b3",
+      "size_bytes": 523,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-LEGIT-04",
+      "filename": "legitimate/legit_04.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Authenticated recruitment interview invitation from primary corporate domain.",
+      "sha256": "f14752017d0015357ef9d9dd594f7ce30ea915ad8672ac7a7a0cbeb0d3a7f65b",
+      "size_bytes": 530,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-LEGIT-05",
+      "filename": "legitimate/legit_05.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Routine monthly banking statement notification with standard HTTPS banking URL.",
+      "sha256": "302f14fb976404416011b42c527e8867799b5f8f69c558c4efb785a31d4574a5",
+      "size_bytes": 494,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-LEGIT-06",
+      "filename": "legitimate/legit_06.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Monthly cloud infrastructure billing invoice with genuine portal link.",
+      "sha256": "2e105a9be496f69e7270ef135c3854859c8195dadab01315d10765a816c5b09e",
+      "size_bytes": 478,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-LEGIT-07",
+      "filename": "legitimate/legit_07.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Standard post-change confirmation notice sent after successful user-initiated password update.",
+      "sha256": "2536007406f85bad9fb284b2a38329b3e1d7c9c8c8b02698e90d1d17dbb6c37c",
+      "size_bytes": 490,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-LEGIT-08",
+      "filename": "legitimate/legit_08.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Internal corporate wellness announcement distributed across legitimate intranet portal.",
+      "sha256": "2483f9faee0516c906ca42074bc8815f468f7480c049cf18f570b2416a2dc444",
+      "size_bytes": 520,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-LEGIT-09",
+      "filename": "legitimate/legit_09.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Standard collaborative document sharing invitation from Google Workspace.",
+      "sha256": "33d32d8cf409fed0288af5497cdc22d73a887decd880ef31f661212c64aa9c0b",
+      "size_bytes": 557,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    },
+    {
+      "test_id": "CORPUS-LEGIT-10",
+      "filename": "legitimate/legit_10.eml",
+      "category": "legitimate",
+      "expected_verdict": "SAFE",
+      "expected_severity": "SAFE",
+      "expected_indicators": [],
+      "expected_sender_anomalies": [],
+      "expected_url_findings": [],
+      "attachment_metadata": [],
+      "rationale": "Standard calendar meeting invitation containing Google Meet collaboration link.",
+      "sha256": "f02fca7f4befb82705a04ebf654d749a55a15b7f1bc9d8d9fdce99a6dcbcf81f",
+      "size_bytes": 513,
+      "provenance": "Synthetic threat corpus milestone (Milestone 4.3 Validation)"
+    }
+  ]
+}

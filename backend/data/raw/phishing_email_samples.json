@@ -1,0 +1,32 @@
+[
+  {
+    "id": "PE-SAMP-01",
+    "subject": "URGENT: Microsoft 365 Password Expiry",
+    "body": "Your corporate account will be suspended. Verify your credentials immediately at http://login.microsoft.security-verify.com/login",
+    "label": "phishing",
+    "source": "DS-PE-01",
+    "provenance_nature": "SYNTHETIC_FIXTURE_MOCK",
+    "is_synthetic_fixture": true,
+    "transformation_notes": "Manually constructed test mock representing typical credential harvesting phishing attack."
+  },
+  {
+    "id": "PE-SAMP-02",
+    "subject": "Notice: Payroll Direct Deposit Update Required",
+    "body": "Employee direct deposit account details could not be validated. Log in to the HR portal at http://university.edu.portal-update.org/hr to avoid salary delay.",
+    "label": "phishing",
+    "source": "DS-PE-04",
+    "provenance_nature": "SYNTHETIC_FIXTURE_MOCK",
+    "is_synthetic_fixture": true,
+    "transformation_notes": "Manually constructed test mock representing HR payroll phishing attack."
+  },
+  {
+    "id": "PE-SAMP-03",
+    "subject": "Duo Security: Two-Factor Authentication Reset",
+    "body": "An unauthorized device attempted to log into your account. Re-enroll your security token here: http://192.168.1.50/duo/auth",
+    "label": "phishing",
+    "source": "DS-PE-03",
+    "provenance_nature": "SYNTHETIC_FIXTURE_MOCK",
+    "is_synthetic_fixture": true,
+    "transformation_notes": "Manually constructed test mock representing 2FA reset lure with private IP target."
+  }
+]

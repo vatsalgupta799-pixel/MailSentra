@@ -56,9 +56,28 @@ class AuthProtocolsAnalyzer(BaseDetectionModule):
         config: Optional[AuthProtocolsConfig] = None,
         resolver: Optional[BaseDNSResolver] = None,
         dkim_executor: Optional[DKIMExecutor] = None,
+        offline_mode: bool = False,
     ):
-        self.config = config or AuthProtocolsConfig()
-        self.resolver = resolver or AsyncDNSResolver(config=self.config)
+        if config is None:
+            from app.core.config import settings
+            self.config = AuthProtocolsConfig(
+                local_authserv_id=settings.LOCAL_AUTHSERV_ID,
+                dmarc_policy_enforcement_enabled=settings.DMARC_POLICY_ENFORCEMENT_ENABLED,
+                offline_mode=offline_mode,
+            )
+        else:
+            self.config = config
+            if offline_mode:
+                self.config.offline_mode = True
+            if self.config.local_authserv_id is None:
+                from app.core.config import settings
+                if settings.LOCAL_AUTHSERV_ID:
+                    self.config.local_authserv_id = settings.LOCAL_AUTHSERV_ID
+        if self.config.offline_mode:
+            from app.modules.auth_protocols.dns_resolver import OfflineBlockDNSResolver
+            self.resolver = resolver or OfflineBlockDNSResolver(config=self.config)
+        else:
+            self.resolver = resolver or AsyncDNSResolver(config=self.config)
         self._owns_executor = dkim_executor is None
         self.dkim_executor = dkim_executor or DKIMExecutor(config=self.config)
 
@@ -93,10 +112,17 @@ class AuthProtocolsAnalyzer(BaseDetectionModule):
         forwarder_evidence: Optional[ForwarderTrustEvidence] = None,
         tenant_id: Optional[str] = None,
         db: Optional[AsyncSession] = None,
+        offline_mode: Optional[bool] = None,
     ) -> AuthProtocolsResult:
         """Coordinates full asynchronous authentication evaluation and header generation."""
         failed_evaluators: List[str] = []
         execution_telemetry: Dict[str, Any] = {}
+
+        is_offline = (
+            self.config.offline_mode
+            if offline_mode is None
+            else offline_mode
+        )
 
         # -------------------------------------------------------------
         # 1. Determine Channel & Ingress Parameters
@@ -111,7 +137,7 @@ class AuthProtocolsAnalyzer(BaseDetectionModule):
 
         # HTTP / non-SMTP channels MUST NEVER rely on untrusted transport metadata (Step 3.7.3B Finding L3)
         effective_smtp_metadata: Optional[TrustedSMTPMetadata] = None
-        if is_smtp_channel and trusted_smtp_metadata is not None and trusted_smtp_metadata.is_trusted_mta:
+        if not is_offline and is_smtp_channel and trusted_smtp_metadata is not None and trusted_smtp_metadata.is_trusted_mta:
             effective_smtp_metadata = trusted_smtp_metadata
 
         # -------------------------------------------------------------
@@ -129,6 +155,58 @@ class AuthProtocolsAnalyzer(BaseDetectionModule):
         )
 
         # -------------------------------------------------------------
+        # 2B. Fast-Track P0.3: Explicit Offline Evaluation Path
+        # -------------------------------------------------------------
+        if is_offline:
+            from_domain: Optional[str] = None
+            if parsed_email and parsed_email.from_sender and parsed_email.from_sender.domain:
+                from_domain = parsed_email.from_sender.domain
+
+            findings = [
+                AuthFinding(
+                    code="OFFLINE_EVALUATION",
+                    protocol="auth_protocols",
+                    severity="INFO",
+                    message="Authentication protocols evaluated in offline mode; live DNS resolution disabled and historical headers treated as untrusted.",
+                )
+            ]
+
+            spf_details = SPFResult(
+                status=ProtocolStatus.NOT_EVALUATED,
+                scope="mfrom",
+                domain=from_domain or "unknown",
+                mechanism="none",
+                explanation="Offline evaluation mode active; live DNS queries disabled.",
+            )
+            dkim_state = DKIMEvaluationState.EVALUATED_NO_SIGNATURES
+            dmarc_details = DMARCResult(
+                status=ProtocolStatus.NOT_EVALUATED,
+                policy=DMARCPolicy.NOT_CONFIGURED,
+                header_from_domain=from_domain or "unknown",
+                published_domain=from_domain or "unknown",
+                record_raw="",
+            )
+
+            return AuthProtocolsResult(
+                spf_status=ProtocolStatus.NOT_EVALUATED,
+                spf_domain=from_domain,
+                dkim_status=ProtocolStatus.NOT_EVALUATED,
+                dkim_domain=from_domain,
+                dmarc_status=ProtocolStatus.NOT_EVALUATED,
+                dmarc_policy=DMARCPolicy.NOT_CONFIGURED,
+                dmarc_aligned_spf=False,
+                dmarc_aligned_dkim=False,
+                spf_details=spf_details,
+                dkim_evaluation_state=dkim_state,
+                dkim_signatures=[],
+                dmarc_details=dmarc_details,
+                dmarc_enforcement=None,
+                parsed_auth_results=parsed_auth_headers,
+                analysis_status=AnalysisCompletionStatus.COMPLETED,
+                failed_evaluators=[],
+                findings=findings,
+                execution_telemetry={"offline_mode": True, "dns_queries_executed": 0},
+            )
         # 3. Stage 2: Parallel Protocol Evaluation (SPF, DKIM, DMARC)
         # -------------------------------------------------------------
         # Extract identities
@@ -242,25 +320,29 @@ class AuthProtocolsAnalyzer(BaseDetectionModule):
         # 4. Stage 3–5: Receiver-Local Policy Enforcement
         # -------------------------------------------------------------
         enforcement_decision: Optional[DMARCEnforcementDecision] = None
-        try:
-            enforcement_decision = self.policy_enforcer.enforce(
-                dmarc_result=dmarc_result,
-                spf_result=spf_result,
-                dkim_results=dkim_signatures,
-                parsed_email=parsed_email,
-                raw_payload=raw_payload,
-                channel=effective_channel,
-                trusted_smtp_metadata=effective_smtp_metadata,
-                admin_rules=admin_rules,
-                admin_actor=admin_actor,
-                forwarder_evidence=forwarder_evidence,
-                threat_signals=corroborating_signals,
-                tenant_id=effective_tenant,
-                dkim_evaluated=(dkim_state != DKIMEvaluationState.NOT_EVALUATED_MISSING_RAW_BYTES),
-            )
-        except Exception as e_enf:
-            logger.error("Unexpected error in DMARCPolicyEnforcer: %s", str(e_enf), exc_info=True)
-            failed_evaluators.append("policy_enforcer")
+        if getattr(self.config, "dmarc_policy_enforcement_enabled", True):
+            try:
+                enforcement_decision = self.policy_enforcer.enforce(
+                    dmarc_result=dmarc_result,
+                    spf_result=spf_result,
+                    dkim_results=dkim_signatures,
+                    parsed_email=parsed_email,
+                    raw_payload=raw_payload,
+                    channel=effective_channel,
+                    trusted_smtp_metadata=effective_smtp_metadata,
+                    admin_rules=admin_rules,
+                    admin_actor=admin_actor,
+                    forwarder_evidence=forwarder_evidence,
+                    threat_signals=corroborating_signals,
+                    tenant_id=effective_tenant,
+                    dkim_evaluated=(dkim_state != DKIMEvaluationState.NOT_EVALUATED_MISSING_RAW_BYTES),
+                )
+            except Exception as e_enf:
+                logger.error("Unexpected error in DMARCPolicyEnforcer: %s", str(e_enf), exc_info=True)
+                failed_evaluators.append("policy_enforcer")
+        else:
+            logger.info("DMARC receiver-local policy enforcement is disabled by configuration (monitoring/staging mode).")
+            execution_telemetry["policy_enforcement"] = "disabled"
 
         # -------------------------------------------------------------
         # 5. Stage 6: Authentication-Results Header Generation
@@ -339,8 +421,28 @@ class AuthProtocolsAnalyzer(BaseDetectionModule):
         )
 
     async def shutdown(self) -> None:
-        """Shuts down underlying resources if owned by this analyzer."""
+        """Shuts down underlying resources if owned by this analyzer.
+        
+        Guarantees idempotent execution, catches exceptions per resource,
+        and ensures complete shutdown of thread workers and resolver cache.
+        """
+        errors = []
         if self._owns_executor and self.dkim_executor:
-            await self.dkim_executor.shutdown()
+            try:
+                await self.dkim_executor.shutdown()
+            except Exception as e_exec:
+                logger.error("Error during DKIM executor shutdown: %s", str(e_exec), exc_info=True)
+                errors.append(e_exec)
+
         if hasattr(self.resolver, "close"):
-            await self.resolver.close()
+            try:
+                await self.resolver.close()
+            except Exception as e_res:
+                logger.error("Error during DNS resolver close: %s", str(e_res), exc_info=True)
+                errors.append(e_res)
+
+        if errors:
+            logger.warning(
+                "AuthProtocolsAnalyzer shutdown completed with %d error(s).",
+                len(errors),
+            )

@@ -1,0 +1,24 @@
+[
+  {
+    "id": "BF-SAMP-01",
+    "sender": "CEO <ceo-urgent-office@company-mail.com>",
+    "subject": "Urgent Wire Transfer Assistance - Acquisition",
+    "body": "I am in an executive board meeting with no phone reception. We need to wire $84,500 immediately to close the vendor contract. Send confirmation once the wire is initiated.",
+    "label": "bec",
+    "source": "DS-BF-05",
+    "provenance_nature": "SYNTHETIC_FIXTURE_MOCK",
+    "is_synthetic_fixture": true,
+    "transformation_notes": "Manually constructed test mock representing CEO fraud wire transfer urgency."
+  },
+  {
+    "id": "BF-SAMP-02",
+    "sender": "Barrister John Smith <barrister.smith@financial-trust.org>",
+    "subject": "Urgent Assistance: $18.5M Estate Remittance",
+    "body": "I represent the late civil engineer. As his account remains unclaimed, I seek your partnership to repatriate these funds with 40% disbursement to you.",
+    "label": "bec",
+    "source": "DS-BF-01",
+    "provenance_nature": "SYNTHETIC_FIXTURE_MOCK",
+    "is_synthetic_fixture": true,
+    "transformation_notes": "Manually constructed test mock representing 419 advance-fee inheritance fraud."
+  }
+]

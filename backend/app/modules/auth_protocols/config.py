@@ -44,6 +44,12 @@ class AuthProtocolsConfig(BaseModel):
     local_authserv_id: Optional[str] = None
     trusted_authserv_ids: List[str] = Field(default_factory=list)
 
+    # Receiver-Local Policy Enforcement Control (Step 3.7.4)
+    dmarc_policy_enforcement_enabled: bool = True
+
+    # Offline Evaluation Mode Control (Fast-Track P0.3)
+    offline_mode: bool = False
+
     @field_validator("local_authserv_id", mode="before")
     @classmethod
     def _validate_local_authserv_id(cls, value: Any) -> Optional[str]:

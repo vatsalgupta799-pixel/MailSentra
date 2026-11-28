@@ -1,0 +1,6 @@
+[
+  {"url": "https://secure-login.paypal.verify-update.xyz/login?redirect=http://attacker.com", "target": "paypal", "tag": "credential_harvesting", "source": "phishtank"},
+  {"url": "https://user:password@micros0ft-portal.top/account-review", "target": "microsoft", "tag": "typosquatting_credentials", "source": "phishtank"},
+  {"url": "http://apple-support.tk/billing/update.php?url=http://evil.com", "target": "apple", "tag": "suspicious_tld_redirect", "source": "phishtank"},
+  {"url": "http://a.b.c.d.e.banking-portal.club/auth", "target": "banking", "tag": "excessive_subdomains", "source": "phishtank"}
+]

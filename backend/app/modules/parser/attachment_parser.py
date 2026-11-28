@@ -162,6 +162,7 @@ def extract_attachments_from_message(
                 content_disposition="inline" if is_inline else "attachment",
                 content_id=content_id,
                 is_inline=is_inline,
+                raw_payload=payload_bytes,
             )
         )
 
