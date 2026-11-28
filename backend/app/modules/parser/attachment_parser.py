@@ -111,12 +111,17 @@ def extract_attachments_from_message(
         if sanitized_fn != orig_fn:
             warnings.append(f"Attachment filename was sanitized from '{orig_fn}' to '{sanitized_fn}'")
 
+        original_size = len(payload_bytes)
+        original_sha256 = hashlib.sha256(payload_bytes).hexdigest()
+        is_truncated = False
+
         # Bound attachment payload size to prevent memory exhaustion
-        if len(payload_bytes) > max_payload_bytes:
+        if original_size > max_payload_bytes:
             warnings.append(
-                f"Attachment '{sanitized_fn}' payload ({len(payload_bytes)} bytes) exceeds max limit of {max_payload_bytes} bytes; payload bounded."
+                f"Attachment '{sanitized_fn}' payload ({original_size} bytes) exceeds max limit of {max_payload_bytes} bytes; payload bounded."
             )
             payload_bytes = payload_bytes[:max_payload_bytes]
+            is_truncated = True
 
         # Executable MIME type warning
         suspect_executable_mimes = {
@@ -142,8 +147,7 @@ def extract_attachments_from_message(
                     f"Suspicious double extension detected in attachment '{sanitized_fn}' (apparent '{name_parts[-2]}' masked as '{name_parts[-1]}')"
                 )
 
-        # Compute SHA-256
-        sha256 = hashlib.sha256(payload_bytes).hexdigest()
+        # Compute SHA-256 (retains full original_sha256)
         ext = extract_file_extension(sanitized_fn)
 
         content_id = part.get("Content-ID")
@@ -158,11 +162,13 @@ def extract_attachments_from_message(
                 file_extension=ext,
                 is_double_extension=is_double_ext,
                 size_bytes=len(payload_bytes),
-                sha256_hash=sha256,
+                sha256_hash=original_sha256,
                 content_disposition="inline" if is_inline else "attachment",
                 content_id=content_id,
                 is_inline=is_inline,
                 raw_payload=payload_bytes,
+                is_truncated=is_truncated,
+                actual_payload_size=original_size,
             )
         )
 

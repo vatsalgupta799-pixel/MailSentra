@@ -119,6 +119,14 @@ class AttachmentDatasetAdapter(BaseDatasetAdapter):
         else:
             canonical_label = CanonicalThreatLabel.MALWARE_ATTACHMENT
 
+        raw_bytes_val = raw_record.get("raw_bytes")
+        if raw_bytes_val is None:
+            raw_bytes_val = raw_record.get("raw_payload")
+
+        size_bytes = raw_record.get("size_bytes", raw_record.get("file_size"))
+        if size_bytes is None and isinstance(raw_bytes_val, (bytes, bytearray)):
+            size_bytes = len(raw_bytes_val)
+
         content_for_hash = f"{filename}_{file_type}_{raw_record.get('sha256', '')}"
         return {
             "record_id": raw_record.get("record_id") or raw_record.get("id") or self.compute_record_hash(content_for_hash)[:16],
@@ -131,7 +139,8 @@ class AttachmentDatasetAdapter(BaseDatasetAdapter):
             "canonical_label": canonical_label.value,
             "original_label": raw_record.get("label"),
             "target_module": self.module_target,
-            "size_bytes": raw_record.get("size_bytes", raw_record.get("file_size")),
-            "raw_bytes": raw_record.get("raw_bytes"),
+            "size_bytes": size_bytes,
+            "raw_bytes": raw_bytes_val,
+            "raw_base64": raw_record.get("raw_base64") or raw_record.get("payload_base64"),
             "content_type": raw_record.get("content_type"),
         }

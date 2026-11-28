@@ -46,8 +46,41 @@ class UrlAnalysisConfig(BaseModel):
         ]
     )
 
+    default_protected_brands: List[str] = Field(
+        default_factory=lambda: [
+            "paypal.com",
+            "ebay.com",
+            "chase.com",
+            "nationalcity.com",
+            "microsoft.com",
+            "google.com",
+            "apple.com",
+            "amazon.com",
+            "wellsfargo.com",
+            "bankofamerica.com",
+            "citi.com",
+            "netflix.com",
+            "facebook.com",
+            "instagram.com",
+            "linkedin.com",
+            "dropbox.com",
+            "yahoo.com",
+        ]
+    )
+
     protected_domains: List[str] = Field(default_factory=list)
     typosquatting_max_distance: int = 2
     typosquatting_min_similarity: float = 0.75
     typosquatting_min_domain_length: int = 5
     max_subdomain_labels: int = 4
+
+    def get_effective_protected_domains(self) -> List[str]:
+        """Returns union of explicitly configured protected domains and default protected brands."""
+        merged: List[str] = []
+        for d in self.protected_domains:
+            if d and d not in merged:
+                merged.append(d)
+        for d in self.default_protected_brands:
+            if d and d not in merged:
+                merged.append(d)
+        return merged

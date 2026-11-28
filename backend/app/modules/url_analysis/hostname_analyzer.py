@@ -12,6 +12,7 @@ from app.modules.identity.domain_utils import (
     detect_mixed_scripts,
     detect_suspicious_unicode,
     get_registered_domain_offline,
+    is_subdomain_of,
     normalize_domain,
 )
 from app.modules.url_analysis.config import UrlAnalysisConfig
@@ -42,6 +43,8 @@ class HostAnalysisResult:
     is_shortener: bool = False
     typosquat_target: Optional[str] = None
     typosquat_similarity: float = 0.0
+    subdomain_brand_target: Optional[str] = None
+    subdomain_brand_evidence: Optional[str] = None
 
 
 def _try_parse_ip(host_stripped: str) -> Optional[tuple[ipaddress._BaseAddress, bool]]:
@@ -191,5 +194,81 @@ class HostnameAnalyzer:
                         res.typosquat_target = norm_prot
                         res.typosquat_similarity = sim
                         break
+
+        # Subdomain brand-impersonation check
+        brand_targets = (
+            config.get_effective_protected_domains()
+            if hasattr(config, "get_effective_protected_domains")
+            else config.protected_domains
+        )
+        if brand_targets and reg_domain and norm_host != reg_domain:
+            labels = [lbl for lbl in norm_host.split(".") if lbl]
+            reg_labels = [lbl for lbl in reg_domain.split(".") if lbl]
+            if len(labels) > len(reg_labels):
+                subdomain_labels = labels[: len(labels) - len(reg_labels)]
+
+                # Check both normalized ASCII and decoded IDN subdomains
+                decoded_sub_labels: List[str] = []
+                if res.decoded_hostname and res.decoded_hostname != norm_host:
+                    dec_labels = [lbl for lbl in res.decoded_hostname.split(".") if lbl]
+                    dec_reg = get_registered_domain_offline(res.decoded_hostname)
+                    dec_reg_labels = [lbl for lbl in dec_reg.split(".") if lbl] if dec_reg else []
+                    if len(dec_labels) > len(dec_reg_labels):
+                        decoded_sub_labels = dec_labels[: len(dec_labels) - len(dec_reg_labels)]
+
+                for brand in brand_targets:
+                    norm_brand = normalize_domain(brand)
+                    if not norm_brand:
+                        continue
+                    brand_reg = get_registered_domain_offline(norm_brand) or norm_brand
+
+                    # 1. Canonical check: skip if registered domain IS or belongs to the brand
+                    if (
+                        reg_domain == brand_reg
+                        or reg_domain == norm_brand
+                        or is_subdomain_of(reg_domain, norm_brand)
+                        or is_subdomain_of(norm_brand, reg_domain)
+                    ):
+                        continue
+
+                    brand_labels = [lbl for lbl in norm_brand.split(".") if lbl]
+                    k = len(brand_labels)
+
+                    # Rule 1: Contiguous multi-label brand domain sequence in subdomains
+                    # e.g. ['paypal', 'com'] or ['ebay', 'com'] or ['nationalcity', 'com']
+                    matched_rule1 = False
+                    if k >= 2 and k <= len(subdomain_labels):
+                        for i in range(len(subdomain_labels) - k + 1):
+                            if subdomain_labels[i : i + k] == brand_labels:
+                                matched_rule1 = True
+                                break
+                        if not matched_rule1 and decoded_sub_labels and k <= len(decoded_sub_labels):
+                            for i in range(len(decoded_sub_labels) - k + 1):
+                                if decoded_sub_labels[i : i + k] == brand_labels:
+                                    matched_rule1 = True
+                                    break
+
+                    if matched_rule1:
+                        res.subdomain_brand_target = norm_brand
+                        res.subdomain_brand_evidence = (
+                            f"Subdomain contains embedded brand domain '{norm_brand}' "
+                            f"under unrelated registered domain '{reg_domain}'"
+                        )
+                        break
+
+                    # Rule 2: Standalone exact brand-name label in subdomains
+                    # e.g. 'paypal' in paypal.example.org where brand is paypal.com
+                    # Requires brand stem >= 4 chars to prevent short common words
+                    brand_stem = brand_labels[0] if brand_labels else ""
+                    if len(brand_stem) >= 4:
+                        if brand_stem in subdomain_labels or (
+                            decoded_sub_labels and brand_stem in decoded_sub_labels
+                        ):
+                            res.subdomain_brand_target = norm_brand
+                            res.subdomain_brand_evidence = (
+                                f"Subdomain label matches protected brand name '{brand_stem}' "
+                                f"(brand: '{norm_brand}') under unrelated registered domain '{reg_domain}'"
+                            )
+                            break
 
         return res

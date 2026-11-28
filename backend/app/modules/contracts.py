@@ -96,6 +96,9 @@ class AttachmentMetadata(BaseModel):
     content_id: Optional[str] = None
     is_inline: bool = False
     raw_payload: Optional[bytes] = Field(default=None, repr=False, exclude=True)
+    is_truncated: bool = False
+    declared_size_bytes: Optional[int] = None
+    actual_payload_size: Optional[int] = None
 
 
 class ParsedEmail(BaseModel):
@@ -636,6 +639,7 @@ class AttachmentFinding(BaseModel):
     extracted_archive_names: List[str] = Field(default_factory=list)
     analysis_status: str = "COMPLETED"
     error_message: Optional[str] = None
+    is_truncated: bool = False
 
 
 class AttachmentAnalysisResult(BaseModel):

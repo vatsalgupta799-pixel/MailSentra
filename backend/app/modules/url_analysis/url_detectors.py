@@ -28,6 +28,7 @@ class SuspicionSignal(str, Enum):
     HOMOGRAPH_HOSTNAME = "HOMOGRAPH_HOSTNAME"
     ZERO_WIDTH_UNICODE = "ZERO_WIDTH_UNICODE"
     TYPOSQUATTING_HOSTNAME = "TYPOSQUATTING_HOSTNAME"
+    SUBDOMAIN_BRAND_IMPERSONATION = "SUBDOMAIN_BRAND_IMPERSONATION"
     EMBEDDED_CREDENTIALS = "EMBEDDED_CREDENTIALS"
 
     # Medium (weight=4)
@@ -60,6 +61,7 @@ SIGNAL_WEIGHTS = {
     SuspicionSignal.HOMOGRAPH_HOSTNAME: 6,
     SuspicionSignal.ZERO_WIDTH_UNICODE: 6,
     SuspicionSignal.TYPOSQUATTING_HOSTNAME: 6,
+    SuspicionSignal.SUBDOMAIN_BRAND_IMPERSONATION: 6,
     SuspicionSignal.EMBEDDED_CREDENTIALS: 6,
     SuspicionSignal.SUSPICIOUS_TLD: 4,
     SuspicionSignal.OPEN_REDIRECT_PARAM: 4,
@@ -224,6 +226,15 @@ class SuspicionEngine:
                 SuspicionSignal.TYPOSQUATTING_HOSTNAME,
                 f"Domain '{host_analysis.registered_domain}' closely resembles protected brand '{host_analysis.typosquat_target}' "
                 f"(similarity: {host_analysis.typosquat_similarity:.2f})",
+            )
+
+        # 16. Subdomain Brand Impersonation
+        if host_analysis.subdomain_brand_target:
+            add_sig(
+                SuspicionSignal.SUBDOMAIN_BRAND_IMPERSONATION,
+                host_analysis.subdomain_brand_evidence
+                or f"Subdomain impersonates protected brand '{host_analysis.subdomain_brand_target}' "
+                f"under unrelated domain '{host_analysis.registered_domain}'",
             )
 
         # 16. High-Entropy Path Segment

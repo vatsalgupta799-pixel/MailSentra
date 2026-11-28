@@ -5,7 +5,8 @@ into deterministic risk scores, risk tiers (CLEAN, SUSPICIOUS, MALICIOUS), and t
 Guarantees that detector failures cannot silently yield false-negative clean verdicts.
 """
 
-from typing import Any, Dict, List, Optional, Tuple
+import re
+from typing import Any, Dict, List, Optional, Set, Tuple
 from app.models.scan import RiskTier
 from app.modules.contracts import (
     AttachmentAnalysisResult,
@@ -24,6 +25,15 @@ class RiskEngine:
         "Module 8: Live Threat Intelligence Reputation Lookups (Phase 3 Deferred)",
     ]
 
+    HEADER_INTEGRITY_INDICATORS = {
+        "MALFORMED_SENDER_ADDRESS",
+        "DUPLICATE_FROM_HEADER",
+        "MISSING_FROM_HEADER",
+        "DUPLICATE_REPLY_TO_HEADER",
+        "DUPLICATE_SENDER_HEADER",
+        "MISSING_SENDER_HEADER",
+    }
+
     def evaluate(
         self,
         identity_result: Optional[IdentityAnalysisResult] = None,
@@ -38,6 +48,7 @@ class RiskEngine:
         """
         contributing_signals: List[str] = []
         failed_modules: List[str] = []
+        impersonated_brands_seen: Set[str] = set()
         base_score = 0.0
 
         is_malicious = False
@@ -68,26 +79,78 @@ class RiskEngine:
                 for f in url_result.findings:
                     if f.severity == UrlRiskSeverity.MALICIOUS:
                         contributing_signals.append(f"[URL-MALICIOUS] {f.url}: {f.reason}")
+                        if "SUBDOMAIN_BRAND_IMPERSONATION" in (f.reason or ""):
+                            m = re.search(r"(?:brand\s+domain|brand\s+name|brand)\s+'([^']+)'", f.reason)
+                            if m:
+                                b_stem = m.group(1).lower().split(".")[0].replace(" ", "")
+                                impersonated_brands_seen.add(b_stem)
             elif url_result.highest_severity == UrlRiskSeverity.SUSPICIOUS:
                 is_suspicious = True
                 base_score = max(base_score, 45.0)
                 for f in url_result.findings:
                     if f.severity == UrlRiskSeverity.SUSPICIOUS:
                         contributing_signals.append(f"[URL-SUSPICIOUS] {f.url}: {f.reason}")
+                        if "SUBDOMAIN_BRAND_IMPERSONATION" in (f.reason or ""):
+                            m = re.search(r"(?:brand\s+domain|brand\s+name|brand)\s+'([^']+)'", f.reason)
+                            if m:
+                                b_stem = m.group(1).lower().split(".")[0].replace(" ", "")
+                                impersonated_brands_seen.add(b_stem)
 
         # 3. Sender Identity & Impersonation Signals (Module 3)
         if identity_result:
             if identity_result.analysis_status == "FAILED":
                 failed_modules.append("SenderIdentityAnalyzer")
+            seen_identity_keys = set()
             for f in identity_result.findings:
-                if f.is_vip or "IMPERSONATION" in f.indicator:
+                if f.is_vip or f.indicator in ("VIP_IMPERSONATION", "ORGANIZATIONAL_ROLE_IMPERSONATION"):
                     is_malicious = True
                     base_score = max(base_score, 80.0)
-                    contributing_signals.append(f"[IDENTITY-IMPERSONATION] {f.indicator}: {f.description}")
+                    sig_key = ("IMPERSONATION", f.indicator, f.target_name or "")
+                    if sig_key not in seen_identity_keys:
+                        seen_identity_keys.add(sig_key)
+                        contributing_signals.append(f"[IDENTITY-IMPERSONATION] {f.indicator}: {f.description}")
+                elif f.indicator == "DISPLAY_NAME_BRAND_IMPERSONATION":
+                    sig_key = ("BRAND_IMPERSONATION", f.indicator, f.target_name or "")
+                    b_stem = (f.target_name or "").lower().replace(" ", "").split(".")[0]
+                    is_duplicate_brand = b_stem in impersonated_brands_seen
+
+                    # Check for strong corroborating malicious evidence
+                    has_corroborating_malicious = is_malicious or (
+                        url_result and url_result.highest_severity == UrlRiskSeverity.MALICIOUS
+                    ) or (
+                        attachment_result and attachment_result.highest_severity == "MALICIOUS"
+                    )
+
+                    if has_corroborating_malicious:
+                        is_malicious = True
+                        base_score = max(base_score, 80.0)
+                    else:
+                        # Standalone or uncorroborated display-name brand mismatch is SUSPICIOUS
+                        is_suspicious = True
+                        base_score = max(base_score, 60.0)
+
+                    if sig_key not in seen_identity_keys and not is_duplicate_brand:
+                        seen_identity_keys.add(sig_key)
+                        if b_stem:
+                            impersonated_brands_seen.add(b_stem)
+                        if has_corroborating_malicious:
+                            contributing_signals.append(f"[IDENTITY-IMPERSONATION] {f.indicator}: {f.description}")
+                        else:
+                            contributing_signals.append(f"[IDENTITY-BRAND-MISMATCH] {f.indicator}: {f.description}")
                 elif "MISMATCH" in f.indicator or "LOOKALIKE" in f.indicator:
                     is_suspicious = True
                     base_score = max(base_score, 55.0)
-                    contributing_signals.append(f"[IDENTITY-MISMATCH] {f.indicator}: {f.description}")
+                    sig_key = ("MISMATCH", f.indicator, f.target_name or "")
+                    if sig_key not in seen_identity_keys:
+                        seen_identity_keys.add(sig_key)
+                        contributing_signals.append(f"[IDENTITY-MISMATCH] {f.indicator}: {f.description}")
+                elif f.indicator in self.HEADER_INTEGRITY_INDICATORS:
+                    is_suspicious = True
+                    base_score = max(base_score, 55.0)
+                    sig_key = ("HEADER_INTEGRITY", f.indicator)
+                    if sig_key not in seen_identity_keys:
+                        seen_identity_keys.add(sig_key)
+                        contributing_signals.append(f"[IDENTITY-HEADER-INTEGRITY] {f.indicator}: {f.description}")
 
         # 4. Authentication Protocols Signals (Module 4)
         if auth_result:

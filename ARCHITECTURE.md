@@ -75,10 +75,12 @@ flowchart TD
 - **Outputs**: `ParsedEmail` dataclass.
 
 ### Component 3: Sender Identity Verification Module (`mailsentra/modules/identity`)
-- **Purpose**: Validates sender legitimacy and detects display name / cousin-domain spoofing.
-- **Inputs**: Header dictionary, Envelope-From, Header-From, and organizational directory.
+- **Purpose**: Validates sender legitimacy, structural header integrity, display name impersonation, and cousin-domain spoofing.
+- **Inputs**: Header dictionary, Envelope-From, Header-From, organizational directory, and protected brand catalog.
 - **Responsibilities**:
   - Comparison of Envelope-From (`Return-Path`) vs Header-From (`From:`) vs `Reply-To:`.
+  - Structural header integrity verification: detects `MALFORMED_SENDER_ADDRESS`, `DUPLICATE_FROM_HEADER`, `MISSING_FROM_HEADER`, `DUPLICATE_REPLY_TO_HEADER`, `DUPLICATE_SENDER_HEADER`, and `MISSING_SENDER_HEADER` (Priority 1).
+  - Protected brand display-name impersonation detection (Priority 3): cross-references claimed brand names against offline Public Suffix List (PSL)-aware catalog of explicitly authorized domains. Applies ambiguity filtering for homonym names ("Chase", "Apple"), non-impersonation context filtering (reviews, clubs), and eliminates implicit brand-stem guessing (Risk B).
   - Executive/VIP display name impersonation detection (e.g., "Tim Cook <attacker@random.com>").
   - Typosquatting and cousin-domain detection (Levenshtein distance, Jaro-Winkler, vowel dropping, TLD swapping).
   - Internationalized Domain Name (IDN) homoglyph and Punycode attack detection (e.g., `goog1e.com`, `аpple.com` with Cyrillic 'а').
@@ -98,6 +100,7 @@ flowchart TD
 - **Inputs**: Array of extracted raw URLs.
 - **Responsibilities**:
   - URL canonicalization and defanging.
+  - Subdomain Brand Impersonation detection (Priority 2): identifies legitimate brand domains embedded inside attacker-controlled subdomains while the registrable domain belongs to an unrelated third party (e.g. `signin.paypal.com.evil.org`), using offline Public Suffix List parsing, canonical brand-domain exclusions, and IDN normalization.
   - IP-based host detection (e.g., `http://192.168.1.1/login`), hex/octal encoded hosts.
   - Suspicious TLD scoring (e.g., `.xyz`, `.top`, `.tk`, `.zip`).
   - Open redirect parameter analysis (`redirect_to=`, `url=`, `next=`).
@@ -136,12 +139,15 @@ flowchart TD
 - **Outputs**: `ThreatIntelResult`.
 
 ### Component 9: Risk Scoring and Decision Engine (`mailsentra/modules/risk_engine`)
-- **Purpose**: Synthesizes multi-dimensional telemetry into a deterministic, explainable risk score.
+- **Purpose**: Synthesizes multi-dimensional telemetry into a deterministic, explainable risk score and actionable classification tier.
 - **Inputs**: Aggregated output results from Modules 3 through 8.
 - **Responsibilities**:
-  - Weighted factor evaluation across identity, authentication, URL, attachment, semantic, and reputation vectors.
-  - Calculation of normalized composite score ($0 \dots 100$).
-  - Categorization into definitive risk classifications: `CLEAN` (0–29), `SUSPICIOUS` (30–69), `MALICIOUS` (70–100).
+  - Unified signal evaluation across Identity, Authentication, URL, and Attachment vectors.
+  - Actionable structural header integrity handling (`MALFORMED_SENDER_ADDRESS`, `DUPLICATE_FROM_HEADER`, etc.) with non-punitive `EMPTY_RETURN_PATH` classification.
+  - Cross-analyzer brand deduplication: prevents artificial score inflation when URL analysis and Identity analysis fire on the same underlying brand claim.
+  - Risk-based brand impersonation arbitration: standalone display-name mismatch evaluates to `SUSPICIOUS` (score 62.0), while requiring corroborating threat evidence (malicious URL, weaponized attachment, DMARC reject/quarantine) to reach `MALICIOUS` (score 82.0+).
+  - Categorization into definitive risk classifications: `CLEAN` (0.0), `SUSPICIOUS` (30.0–74.0), `MALICIOUS` (75.0–100.0).
+  - Failure isolation: ensures that a failure in any detection module flags the assessment as `EVALUATION INCOMPLETE` requiring manual SOC review rather than defaulting to a false-negative CLEAN.
   - Generation of an auditable rationale matrix detailing each triggered rule, its severity, and contributing score delta.
 - **Outputs**: `RiskDecisionReport`.
 

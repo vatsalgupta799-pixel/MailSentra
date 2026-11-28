@@ -111,9 +111,31 @@ class AttachmentAnalyzer(BaseDetectionModule):
         filename = att.filename or "unnamed_attachment.bin"
         declared_mime = att.content_type or "application/octet-stream"
         payload_bytes = getattr(att, "raw_payload", None) or b""
+        is_truncated = getattr(att, "is_truncated", False)
+
+        # Reconcile effective analysis size: never allow declared size to shrink actual payload
+        actual_len = getattr(att, "actual_payload_size", None)
+        if actual_len is None:
+            actual_len = len(payload_bytes)
+        declared_size = getattr(att, "declared_size_bytes", None)
+        if declared_size is None:
+            declared_size = att.size_bytes
+
+        # Effective size used for oversized bounding decision
+        effective_size = max(att.size_bytes, actual_len)
+        if declared_size is not None:
+            effective_size = max(effective_size, declared_size)
 
         # 1. SHA-256 Checksum Calculation & Verification
-        actual_sha256 = hashlib.sha256(payload_bytes).hexdigest() if payload_bytes else att.sha256_hash
+        # If payload was truncated, att.sha256_hash holds the authentic full payload hash
+        if is_truncated and att.sha256_hash:
+            actual_sha256 = att.sha256_hash
+        elif att.sha256_hash:
+            actual_sha256 = att.sha256_hash
+        elif payload_bytes:
+            actual_sha256 = hashlib.sha256(payload_bytes).hexdigest()
+        else:
+            actual_sha256 = ""
 
         finding = AttachmentFinding(
             filename=filename,
@@ -123,14 +145,15 @@ class AttachmentAnalyzer(BaseDetectionModule):
             severity="SAFE",
             details="",
             analysis_status="COMPLETED",
+            is_truncated=is_truncated,
         )
 
         details_messages: List[str] = []
 
         # 2. Oversized Attachment Protection
-        if att.size_bytes > cfg.max_attachment_size_bytes:
+        if effective_size > cfg.max_attachment_size_bytes:
             details_messages.append(
-                f"Attachment size ({att.size_bytes} bytes) exceeds analysis limit ({cfg.max_attachment_size_bytes} bytes)."
+                f"Attachment size ({effective_size} bytes) exceeds analysis limit ({cfg.max_attachment_size_bytes} bytes)."
             )
             finding.severity = "SUSPICIOUS"
             finding.analysis_status = "SKIPPED_OVERSIZED"
@@ -221,33 +244,37 @@ class AttachmentAnalyzer(BaseDetectionModule):
         # 8. Archive Inspection (ZIP / Containers)
         if payload_bytes.startswith((b"PK\x03\x04", b"PK\x05\x06", b"PK\x07\x08")) and ext not in {"docx", "xlsx", "pptx"}:
             finding.is_archive = True
-            archive_res = inspect_zip_archive(payload_bytes, config=cfg)
-            finding.extracted_archive_names = archive_res.entry_names
-            finding.is_encrypted_archive = archive_res.is_encrypted
-            finding.archive_has_traversal = archive_res.has_traversal
+            if is_truncated:
+                finding.severity = "SUSPICIOUS"
+                details_messages.append("Truncated archive buffer cannot be safely decompressed or verified as complete")
+            else:
+                archive_res = inspect_zip_archive(payload_bytes, config=cfg)
+                finding.extracted_archive_names = archive_res.entry_names
+                finding.is_encrypted_archive = archive_res.is_encrypted
+                finding.archive_has_traversal = archive_res.has_traversal
 
-            if archive_res.has_traversal:
-                finding.severity = "MALICIOUS"
-            elif archive_res.is_decompression_bomb:
-                finding.severity = "MALICIOUS"
-            elif archive_res.dangerous_entries:
-                if any(e.lower().endswith(tuple(cfg.dangerous_executable_extensions)) for e in archive_res.dangerous_entries):
+                if archive_res.has_traversal:
                     finding.severity = "MALICIOUS"
-                elif finding.severity != "MALICIOUS":
-                    finding.severity = "SUSPICIOUS"
-            elif archive_res.is_encrypted:
-                if finding.severity != "MALICIOUS":
-                    finding.severity = "SUSPICIOUS"
-            elif archive_res.severity != "SAFE":
-                if finding.severity != "MALICIOUS":
-                    finding.severity = archive_res.severity
+                elif archive_res.is_decompression_bomb:
+                    finding.severity = "MALICIOUS"
+                elif archive_res.dangerous_entries:
+                    if any(e.lower().endswith(tuple(cfg.dangerous_executable_extensions)) for e in archive_res.dangerous_entries):
+                        finding.severity = "MALICIOUS"
+                    elif finding.severity != "MALICIOUS":
+                        finding.severity = "SUSPICIOUS"
+                elif archive_res.is_encrypted:
+                    if finding.severity != "MALICIOUS":
+                        finding.severity = "SUSPICIOUS"
+                elif archive_res.severity != "SAFE":
+                    if finding.severity != "MALICIOUS":
+                        finding.severity = archive_res.severity
 
-            if archive_res.findings:
-                details_messages.extend(archive_res.findings)
-            if archive_res.error:
-                details_messages.append(archive_res.error)
-                if finding.severity == "SAFE":
-                    finding.severity = "SUSPICIOUS"
+                if archive_res.findings:
+                    details_messages.extend(archive_res.findings)
+                if archive_res.error:
+                    details_messages.append(archive_res.error)
+                    if finding.severity == "SAFE":
+                        finding.severity = "SUSPICIOUS"
 
         finding.details = "; ".join(details_messages) if details_messages else "Clean attachment; no structural anomalies detected."
         return finding
